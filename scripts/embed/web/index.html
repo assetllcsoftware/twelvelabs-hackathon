@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIHP // Local Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="frame">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="brand-dot"></span></span>
+        <div>
+          <h1>Energy Infrastructure <em>Health Platform</em></h1>
+          <p class="brand-sub">EIHP // Local Marengo Search</p>
+        </div>
+      </div>
+      <div class="hud">
+        <span class="tag" title="Cached video segments"><span class="lbl">SEG</span><span class="num" id="statSegments">--</span></span>
+        <span class="tag" title="Distinct videos"><span class="lbl">VID</span><span class="num" id="statVideos">--</span></span>
+        <span class="tag dim" id="statBucket"><span class="lbl">BKT</span><span class="num">--</span></span>
+        <button class="ghost" id="refreshBtn" type="button" title="Reload local cache">REFRESH</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="panel">
+          <h2>Mode</h2>
+          <div class="tabs" id="modeTabs">
+            <button class="tab active" data-mode="text">TEXT</button>
+            <button class="tab" data-mode="image">IMAGE</button>
+            <button class="tab" data-mode="text-image">TEXT + IMG</button>
+          </div>
+          <p class="hint" id="modeHint">Describe what you want to find. The full corpus will be ranked by cosine similarity.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Corpus</h2>
+          <ul class="corpus" id="corpusList">
+            <li class="muted">loading…</li>
+          </ul>
+        </div>
+
+        <div class="panel muted small">
+          <h2>How</h2>
+          <p>Each query hits Bedrock for a 512-d embedding, then dot-products against a normalized matrix of cached video segments. Results below open the matched segment via the <code>#t=</code> media fragment.</p>
+        </div>
+      </aside>
+
+      <section class="content">
+        <form id="searchForm" class="query">
+          <div class="query-row">
+            <input id="queryInput" type="text" placeholder="describe what you're looking for…" autocomplete="off" autofocus>
+          </div>
+
+          <div class="dropzone hidden" id="dropzone">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div class="dz-inner">
+              <svg viewBox="0 0 24 24" class="dz-icon" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5l5 5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Drag image, paste from clipboard, or <span class="link">click to choose</span></p>
+              <p class="dz-status" id="dzStatus"></p>
+              <img id="dzPreview" alt="" hidden>
+            </div>
+          </div>
+
+          <div class="query-row controls">
+            <label class="topk">
+              <span>TOP K</span>
+              <input id="topK" type="number" min="1" max="50" value="10">
+            </label>
+            <button id="goBtn" type="submit" class="primary">SEARCH<span class="spinner" id="spinner" hidden></span></button>
+          </div>
+
+          <p id="errorMsg" class="error" hidden></p>
+        </form>
+
+        <section class="results" id="results">
+          <div class="placeholder">
+            <p>No query yet. Try <code>"vegetation growing close to a power line"</code> or drop a frame.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>EIHP // Phase A throwaway · cosine over locally cached Marengo embeddings · presigned URLs expire in 1h</span>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

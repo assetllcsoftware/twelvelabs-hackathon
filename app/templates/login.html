@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIHP // Authenticate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark"><span class="brand-dot"></span></div>
+      <div>
+        <h1>Energy Infrastructure <em>Health Platform</em></h1>
+        <p>EIHP // Restricted Access</p>
+      </div>
+    </div>
+
+    {% if error %}
+    <div class="alert">Invalid credential. Retry.</div>
+    {% endif %}
+
+    <form method="post" action="/login" class="auth-form">
+      <label for="token">Authorization Token</label>
+      <input id="token" type="password" name="token" placeholder="•••••••••••••" autofocus required autocomplete="off">
+      <button type="submit">Authenticate</button>
+    </form>
+
+    <p class="auth-hint">Token issued via team channel / Secrets Manager</p>
+  </main>
+</body>
+</html>

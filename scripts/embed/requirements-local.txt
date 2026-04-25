@@ -1,0 +1,4 @@
+# Local-only deps for scripts/embed/. Do NOT add these to the deployed image —
+# they are intentionally separate from app/ runtime requirements.
+boto3>=1.35,<2.0
+numpy>=1.26,<3.0
