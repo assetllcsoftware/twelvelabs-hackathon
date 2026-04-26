@@ -1,0 +1,9 @@
+# Ultralytics YOLO data config for the PLDM (mountain) slice of PLD-UAV.
+# Paths are resolved relative to ``path``.
+
+path: ../data/yolo_pldm
+train: images/train
+val: images/val
+
+names:
+  0: power_line

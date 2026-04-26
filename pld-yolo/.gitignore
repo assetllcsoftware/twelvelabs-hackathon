@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# Editors
+.idea/
+.vscode/
+.DS_Store
+
+# Auto-downloaded ultralytics weights and any local checkpoints
+*.pt
+*.onnx
+*.engine
+
+# Generated / huge things
+runs/
+data/raw/
+data/videos/
+data/yolo_pldm/
+data/airpelago/yolo/
+data/airpelago/preview/
+
+# Keep the manually-labeled airpelago frames + classes.txt
+# (data/airpelago/frames/ and data/airpelago/classes.txt are committed.)

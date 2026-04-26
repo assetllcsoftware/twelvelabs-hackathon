@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Upload the trained YOLO-seg checkpoints from the sister pld-yolo project
-# into the energy-hackathon videos bucket where the yolo-detect-worker
-# expects to find them.
+# Upload the trained YOLO-seg checkpoints from the in-tree pld-yolo
+# project into the energy-hackathon videos bucket where the
+# yolo-detect-worker expects to find them.
 #
 # Layout written:
 #   s3://<bucket>/models/yolo/pldm-power-line/v1/best.pt
@@ -11,7 +11,8 @@
 #   S3_BUCKET=$(terraform -chdir=infra output -raw bucket_name) \
 #     scripts/upload_yolo_models.sh
 #
-#   # or with explicit overrides:
+#   # or with explicit overrides (e.g. pointing at a sibling checkout
+#   # while the in-tree pld-yolo/ has no `runs/` populated yet):
 #   S3_BUCKET=foo \
 #   PLD_YOLO_DIR=../pld-yolo \
 #     scripts/upload_yolo_models.sh
@@ -23,7 +24,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PLD_YOLO_DIR="${PLD_YOLO_DIR:-$ROOT_DIR/../pld-yolo}"
+PLD_YOLO_DIR="${PLD_YOLO_DIR:-$ROOT_DIR/pld-yolo}"
 
 if [[ -z "${S3_BUCKET:-}" ]]; then
     echo "S3_BUCKET env var is required (try: \$(terraform -chdir=infra output -raw bucket_name))" >&2

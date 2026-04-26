@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://download.pytorch.org/whl/cpu"
+verify_ssl = true
+name = "pytorch-cpu"
+
+[packages]
+torch = {version = "*", index = "pytorch-cpu"}
+torchvision = {version = "*", index = "pytorch-cpu"}
+ultralytics = ">=8.4"
+opencv-python-headless = ">=4.9"
+numpy = ">=1.26,<2.3"
+Pillow = ">=10.0"
+tqdm = ">=4.66"
+PyYAML = ">=6.0"
+gdown = ">=5.1"
+scipy = ">=1.11"
+labelme = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
