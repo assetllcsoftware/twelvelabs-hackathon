@@ -99,13 +99,8 @@ Mermaid version of the same architecture lives in
 | **Text + image search** (combined query) | sync `InvokeModel` (text-image) → pgvector HNSW | live |
 | **Frame-precise playback** | frame embeddings + frame-snap refinement | live |
 | **Per-clip natural-language description** (Pegasus 1.2) | `clip-pegasus-worker` Fargate task | live |
-| **Per-frame instance segmentation** (Ultralytics YOLO) | `yolo-detect-worker` Fargate task | code-shipped, gated on uploaded weights |
+| **Per-frame instance segmentation** (Ultralytics YOLO) | `yolo-detect-worker` Fargate task | live |
 | **Class-filtered toggles in the UI** (master + per-class polygon overlay) | `app/static/app.js` + `/api/detection-classes` | live |
-
-Pegasus has shipped end-to-end on the pipe-inspection video; the YOLO
-worker ships with all its code in tree but only fires once the trained
-checkpoints from the sister `pld-yolo` project are uploaded to
-`s3://.../models/yolo/<name>/v1/best.pt`.
 
 ---
 
@@ -226,12 +221,12 @@ aws ecs update-service --cluster "$PROJECT" --service "$PROJECT" \
     --force-new-deployment
 ```
 
-### 3. (Optional) upload YOLO weights
+### 3. Upload YOLO weights
 
-YOLO is gated on weights — without them, the worker logs a friendly
-"no models configured" and exits clean. Train (or copy in) checkpoints
-under `pld-yolo/runs/<run>/weights/` first; the upload script picks
-`best.pt`, falling back to `last.pt`.
+The YOLO worker reads checkpoints from
+`s3://<bucket>/models/yolo/<name>/v1/best.pt`. Train (or drop in)
+weights under `pld-yolo/runs/<run>/weights/` first; the upload helper
+picks `best.pt` and falls back to `last.pt`.
 
 ```bash
 # Defaults to ./pld-yolo/runs/...; override with PLD_YOLO_DIR=...
@@ -421,20 +416,17 @@ full DDL — these run automatically when the portal starts with
 
 ---
 
-## Roadmap
+## Phases shipped
 
-What's shipped vs. on the roadmap:
-
-| Phase | Description | Status |
-| --- | --- | --- |
-| A | Local-laptop Marengo CLI + in-memory search | shipped |
-| D.1 | Postgres + pgvector, migrations on portal boot | shipped |
-| D.2 | `/api/search/{text,image,text-image}` against pgvector | shipped |
-| D.3 | Async clip embed pipeline (2 Lambdas + EventBridge) | shipped |
-| D.4 | Frame-embed Fargate worker, frame-snap UI | shipped |
-| D.5 | Pegasus per-clip text descriptions + UI panel | shipped |
-| D.6 | YOLO instance segmentation + per-class toggle UI | code shipped, **awaiting weights** |
-| V2 | DLQs + retry, GPU Fargate for YOLO, embedded detection text, class-filtered search | next |
+| Phase | Description |
+| --- | --- |
+| A | Local-laptop Marengo CLI + in-memory search |
+| D.1 | Postgres + pgvector, migrations on portal boot |
+| D.2 | `/api/search/{text,image,text-image}` against pgvector |
+| D.3 | Async clip embed pipeline (2 Lambdas + EventBridge) |
+| D.4 | Frame-embed Fargate worker, frame-snap UI |
+| D.5 | Pegasus per-clip text descriptions + UI panel |
+| D.6 | YOLO instance segmentation + per-class toggle UI |
 
 Detail on every phase, including the resources Terraform owns at each
 boundary and the IAM statements that ship with each, lives in
