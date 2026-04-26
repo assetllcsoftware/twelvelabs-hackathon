@@ -382,13 +382,214 @@ button.primary[disabled] { opacity: 0.5; cursor: not-allowed; }
   aspect-ratio: 16 / 9;
 }
 
+.result-card .thumb-wrap {
+  position: relative;
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid var(--line-dim);
+}
+
 .result-card .thumb {
   width: 100%;
   display: block;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   background: #000;
-  border-bottom: 1px solid var(--line-dim);
+}
+
+/* ------ yolo detection overlay ------ */
+.detect-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* let video controls / hover pass through */
+}
+.detect-overlay .det {
+  --det-color: #ff8c00;
+  color: var(--det-color);
+}
+.detect-overlay .det-poly {
+  fill: var(--det-color);
+  fill-opacity: 0.18;
+  stroke: var(--det-color);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+/* Mask-only models (power lines etc.) -- thin diagonal polygons need a
+   higher fill opacity to read as actual coloured pixels rather than as
+   barely-visible outlines. */
+.detect-overlay .det.mask-only .det-poly {
+  fill-opacity: 0.55;
+  stroke-width: 0.75;
+}
+.detect-overlay .det-box {
+  fill: none;
+  stroke: var(--det-color);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  stroke-opacity: 0.6;
+  vector-effect: non-scaling-stroke;
+}
+.detect-overlay .det-lbl {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  fill: var(--det-color);
+  paint-order: stroke fill;
+  stroke: rgba(0, 0, 0, 0.6);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+.detect-overlay .det.cls-hidden { display: none; }
+
+.results.detections-off .detect-overlay { display: none; }
+.results.detections-off .det-legend { opacity: 0.5; }
+
+.det-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: 2px;
+}
+.det-chip {
+  --det-color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 1px 6px 1px 4px;
+  border: 1px solid color-mix(in srgb, var(--det-color) 60%, transparent);
+  background: color-mix(in srgb, var(--det-color) 10%, transparent);
+  color: var(--fg-0);
+  text-transform: uppercase;
+}
+.det-chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--det-color);
+  display: inline-block;
+}
+.det-chip.cls-hidden { opacity: 0.35; }
+
+/* ------ detection sidebar panel ------ */
+.panel.detections h2 { color: var(--accent); }
+.det-master {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.det-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.det-toggle input[type="checkbox"] {
+  appearance: none;
+  width: 32px;
+  height: 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+.det-toggle input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 12px;
+  height: 12px;
+  background: var(--fg-2);
+  border-radius: 50%;
+  transition: transform .12s ease, background .12s ease;
+}
+.det-toggle input[type="checkbox"]:checked {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  border-color: var(--accent);
+}
+.det-toggle input[type="checkbox"]:checked::after {
+  transform: translateX(16px);
+  background: var(--accent);
+}
+.det-toggle-lbl {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--fg-1);
+}
+.det-master-hint {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--fg-2);
+}
+.det-classes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.det-class label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border: 1px solid var(--line-dim);
+  background: var(--bg-2);
+  cursor: pointer;
+  font-size: 11px;
+}
+.det-class label:hover { border-color: var(--line); }
+.det-class input[type="checkbox"] {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-3);
+  cursor: pointer;
+  position: relative;
+}
+.det-class input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 1px;
+  font-size: 12px;
+  color: var(--accent);
+  line-height: 1;
+}
+.det-class .dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  display: inline-block;
+}
+.det-class .cls-name {
+  flex: 1;
+  color: var(--fg-0);
+}
+.det-class .cls-meta {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--fg-2);
+}
+.det-hint {
+  font-size: 10px;
+  color: var(--fg-2);
+  margin: 8px 0 0;
 }
 
 .result-card .kind {
@@ -415,6 +616,158 @@ button.primary[disabled] { opacity: 0.5; cursor: not-allowed; }
 .result-card .info .seg .accent { color: var(--accent); }
 .result-card .info .links { display: flex; gap: 10px; margin-top: 4px; }
 .result-card .info .links a { font-size: 10px; letter-spacing: 0.18em; }
+
+/* ------ pegasus inline (pre-cached) text ------ */
+.pegasus-inline {
+  border-top: 1px solid var(--line-dim);
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 203, 0, 0.025);
+}
+.pegasus-inline header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--fg-1);
+  flex-wrap: wrap;
+}
+.pegasus-inline header .badge {
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--good);
+}
+.pegasus-inline header .muted { color: var(--fg-2); }
+.pegasus-inline pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--fg-0);
+  max-height: 220px;
+  overflow: auto;
+}
+
+/* ------ pegasus per-card panel ------ */
+.pegasus {
+  border-top: 1px solid var(--line-dim);
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+}
+.pegasus.busy { background: rgba(255, 203, 0, 0.04); }
+.pegasus-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pegasus-lbl {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.pegasus-hint { font-size: 10px; color: var(--fg-2); }
+.pegasus-hint.muted { color: var(--fg-2); }
+.pegasus-preset {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--fg-0);
+  padding: 4px 6px;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.pegasus-preset:focus { outline: none; border-color: var(--accent); }
+.pegasus-go {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+}
+.pegasus-go:hover { background: var(--accent); color: var(--bg-0); }
+.pegasus-go[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+.pegasus-advanced > summary {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--fg-2);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  padding: 2px 0;
+}
+.pegasus-advanced > summary::-webkit-details-marker { display: none; }
+.pegasus-advanced > summary::before { content: '▸ '; color: var(--accent-dim); }
+.pegasus-advanced[open] > summary::before { content: '▾ '; color: var(--accent); }
+.pegasus-prompt {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--fg-0);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  resize: vertical;
+  min-height: 60px;
+  outline: none;
+}
+.pegasus-prompt:focus { border-color: var(--accent); }
+
+.pegasus-status {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pegasus-status .badge {
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  font-size: 9px;
+}
+.pegasus-status .badge.cached { color: var(--good); }
+.pegasus-status .badge.fresh { color: var(--accent); }
+.pegasus-status .muted { color: var(--fg-2); }
+.pegasus-status.running { color: var(--accent); }
+.pegasus-status.error { color: var(--danger); }
+.pegasus-status a { color: var(--accent); font-size: 10px; letter-spacing: 0.18em; }
+
+.pegasus-output {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-dim);
+  color: var(--fg-0);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 240px;
+  overflow: auto;
+}
 
 /* ------ footer ------ */
 .footer {

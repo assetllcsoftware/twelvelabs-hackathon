@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1360" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+<rect width="1700" height="1360" fill="#f8fafc"/>
+<text x="45" y="50" font-size="30" font-weight="800" fill="#0f172a" text-anchor="start">AWS resource map</text>
+<text x="45" y="80" font-size="13" font-weight="400" fill="#64748b" text-anchor="start">Every resource Terraform manages for the energy-hackathon stack · us-east-1 · account 561700437092 · project video-upload-portal · 112 resources.</text>
+<rect x="45" y="110" width="380" height="290" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="45" y="110" width="6" height="290" rx="2" fill="#7c3aed"/>
+<text x="67" y="134" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Lambda functions</text>
+<text x="411" y="134" font-size="10" font-weight="600" fill="#7c3aed" text-anchor="end">4 funcs · 4 zips · 4 perms · 4 log groups</text>
+<text x="67" y="160" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">start_clip_embed</text>
+<text x="67" y="173" font-size="10" font-weight="400" fill="#475569" text-anchor="start">VPC · Bedrock StartAsyncInvoke (Marengo) on raw-videos/*</text>
+<text x="67" y="190" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">finalize_clip_embed</text>
+<text x="67" y="203" font-size="10" font-weight="400" fill="#475569" text-anchor="start">VPC · upserts clip embeddings · ECS RunTask → Pegasus</text>
+<text x="67" y="220" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">start_frame_task</text>
+<text x="67" y="233" font-size="10" font-weight="400" fill="#475569" text-anchor="start">no-VPC · ECS RunTask → frame-embed-worker</text>
+<text x="67" y="250" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">start_yolo_task</text>
+<text x="67" y="263" font-size="10" font-weight="400" fill="#475569" text-anchor="start">no-VPC · ECS RunTask → yolo-detect-worker</text>
+<text x="67" y="280" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">·  archive_file × 4</text>
+<text x="67" y="293" font-size="10" font-weight="400" fill="#475569" text-anchor="start">.build/lambda/&lt;name&gt;.zip</text>
+<text x="67" y="310" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">·  lambda_permission × 4</text>
+<text x="67" y="323" font-size="10" font-weight="400" fill="#475569" text-anchor="start">events.amazonaws.com → InvokeFunction</text>
+<rect x="455" y="110" width="380" height="290" rx="12" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="455" y="110" width="6" height="290" rx="2" fill="#4338ca"/>
+<text x="477" y="134" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">ECS / Fargate</text>
+<text x="821" y="134" font-size="10" font-weight="600" fill="#4338ca" text-anchor="end">1 cluster · 1 service · 4 task defs</text>
+<text x="477" y="160" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecs_cluster.this</text>
+<text x="477" y="173" font-size="10" font-weight="400" fill="#475569" text-anchor="start">name: video-upload-portal</text>
+<text x="477" y="190" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecs_service.app</text>
+<text x="477" y="203" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Fargate · desired_count=1 · behind ALB</text>
+<text x="477" y="220" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">task_def: app</text>
+<text x="477" y="233" font-size="10" font-weight="400" fill="#475569" text-anchor="start">portal FastAPI (Search + Upload UI)</text>
+<text x="477" y="250" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">task_def: frame-embed-worker</text>
+<text x="477" y="263" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ffmpeg → Marengo image embed → DB</text>
+<text x="477" y="280" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">task_def: clip-pegasus-worker</text>
+<text x="477" y="293" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ffmpeg-cut → Pegasus → clip_descriptions</text>
+<text x="477" y="310" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">task_def: yolo-detect-worker</text>
+<text x="477" y="323" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ultralytics over frame thumbs → frame_detections</text>
+<rect x="865" y="110" width="380" height="290" rx="12" fill="#ecfeff" stroke="#0e7490" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="865" y="110" width="6" height="290" rx="2" fill="#0e7490"/>
+<text x="887" y="134" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">ECR repositories</text>
+<text x="1231" y="134" font-size="10" font-weight="600" fill="#0e7490" text-anchor="end">4 repos</text>
+<text x="887" y="160" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecr_repository.app</text>
+<text x="887" y="173" font-size="10" font-weight="400" fill="#475569" text-anchor="start">portal FastAPI image</text>
+<text x="887" y="190" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecr_repository.frame_worker</text>
+<text x="887" y="203" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ffmpeg + boto3 (Marengo)</text>
+<text x="887" y="220" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecr_repository.clip_pegasus_worker</text>
+<text x="887" y="233" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ffmpeg + psycopg + boto3 (Pegasus)</text>
+<text x="887" y="250" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ecr_repository.yolo_detect_worker</text>
+<text x="887" y="263" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ultralytics + torch image</text>
+<rect x="1275" y="110" width="380" height="290" rx="12" fill="#fefce8" stroke="#b45309" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1275" y="110" width="6" height="290" rx="2" fill="#b45309"/>
+<text x="1297" y="134" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">External — Bedrock + STS</text>
+<text x="1641" y="134" font-size="10" font-weight="600" fill="#b45309" text-anchor="end">3 services consumed</text>
+<text x="1297" y="160" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">Bedrock · Marengo embed-3</text>
+<text x="1297" y="173" font-size="10" font-weight="400" fill="#475569" text-anchor="start">us.twelvelabs.marengo-embed-3-0-v1:0</text>
+<text x="1297" y="190" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">Bedrock · Pegasus 1.2</text>
+<text x="1297" y="203" font-size="10" font-weight="400" fill="#475569" text-anchor="start">us.twelvelabs.pegasus-1-2-v1:0</text>
+<text x="1297" y="220" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">STS · GetCallerIdentity</text>
+<text x="1297" y="233" font-size="10" font-weight="400" fill="#475569" text-anchor="start">clip-pegasus-worker self-identifies for s3Location.bucketOwner</text>
+<text x="1297" y="250" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">(none of these are Terraform-provisioned)</text>
+<text x="1297" y="263" font-size="10" font-weight="400" fill="#475569" text-anchor="start">consumed via IAM policy + invoke API</text>
+<rect x="45" y="420" width="380" height="320" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="45" y="420" width="6" height="320" rx="2" fill="#1d4ed8"/>
+<text x="67" y="444" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">VPC + subnets + endpoints</text>
+<text x="411" y="444" font-size="10" font-weight="600" fill="#1d4ed8" text-anchor="end">1 VPC · 2 subnets · 3 endpoints</text>
+<text x="67" y="470" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">vpc.this</text>
+<text x="67" y="483" font-size="10" font-weight="400" fill="#475569" text-anchor="start">10.0.0.0/16</text>
+<text x="67" y="500" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">subnet.public[0]</text>
+<text x="67" y="513" font-size="10" font-weight="400" fill="#475569" text-anchor="start">us-east-1a · 10.0.1.0/24</text>
+<text x="67" y="530" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">subnet.public[1]</text>
+<text x="67" y="543" font-size="10" font-weight="400" fill="#475569" text-anchor="start">us-east-1b · 10.0.2.0/24</text>
+<text x="67" y="560" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">internet_gateway.this</text>
+<text x="67" y="573" font-size="10" font-weight="400" fill="#475569" text-anchor="start">default route for 0.0.0.0/0</text>
+<text x="67" y="590" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">route_table.public + 2 assocs</text>
+<text x="67" y="603" font-size="10" font-weight="400" fill="#475569" text-anchor="start">shared by both public subnets</text>
+<text x="67" y="620" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">vpc_endpoint.s3</text>
+<text x="67" y="633" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Gateway endpoint (free, route-table attached)</text>
+<text x="67" y="650" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">vpc_endpoint.bedrock_runtime</text>
+<text x="67" y="663" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Interface endpoint (per-AZ ENI)</text>
+<text x="67" y="680" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">vpc_endpoint.secretsmanager</text>
+<text x="67" y="693" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Interface endpoint (per-AZ ENI)</text>
+<rect x="455" y="420" width="380" height="320" rx="12" fill="#fef2f2" stroke="#b91c1c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="455" y="420" width="6" height="320" rx="2" fill="#b91c1c"/>
+<text x="477" y="444" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Security groups + rules</text>
+<text x="821" y="444" font-size="10" font-weight="600" fill="#b91c1c" text-anchor="end">8 SGs · 6 rules</text>
+<text x="477" y="470" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">alb</text>
+<text x="477" y="483" font-size="10" font-weight="400" fill="#475569" text-anchor="start">0.0.0.0/0 → :80</text>
+<text x="477" y="500" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">app</text>
+<text x="477" y="513" font-size="10" font-weight="400" fill="#475569" text-anchor="start">ALB → :8000 (FastAPI)</text>
+<text x="477" y="530" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">db</text>
+<text x="477" y="543" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Postgres :5432 (ingress from 5 sources)</text>
+<text x="477" y="560" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">vpc_endpoints</text>
+<text x="477" y="573" font-size="10" font-weight="400" fill="#475569" text-anchor="start">VPC CIDR → :443</text>
+<text x="477" y="590" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">embedding_lambda</text>
+<text x="477" y="603" font-size="10" font-weight="400" fill="#475569" text-anchor="start">start_clip_embed + finalize_clip_embed ENIs</text>
+<text x="477" y="620" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">frame_worker / clip_pegasus_worker / yolo_detect_worker</text>
+<text x="477" y="633" font-size="10" font-weight="400" fill="#475569" text-anchor="start">one SG per Fargate task family</text>
+<text x="477" y="650" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">rule: db_egress_all</text>
+<text x="477" y="663" font-size="10" font-weight="400" fill="#475569" text-anchor="start">DB → outbound any</text>
+<text x="477" y="680" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">rules: db_ingress_from_{app,embedding_lambda,frame,pegasus,yolo}</text>
+<text x="477" y="693" font-size="10" font-weight="400" fill="#475569" text-anchor="start">5 separate ingress allow rules → DB :5432</text>
+<rect x="865" y="420" width="380" height="320" rx="12" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="865" y="420" width="6" height="320" rx="2" fill="#4338ca"/>
+<text x="887" y="444" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Public ALB</text>
+<text x="1231" y="444" font-size="10" font-weight="600" fill="#4338ca" text-anchor="end">1 LB · 1 listener · 1 target group</text>
+<text x="887" y="470" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">lb.app</text>
+<text x="887" y="483" font-size="10" font-weight="400" fill="#475569" text-anchor="start">internet-facing ALB across both public subnets</text>
+<text x="887" y="500" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">lb_listener.http</text>
+<text x="887" y="513" font-size="10" font-weight="400" fill="#475569" text-anchor="start">HTTP :80 → forward → target group</text>
+<text x="887" y="530" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">lb_target_group.app</text>
+<text x="887" y="543" font-size="10" font-weight="400" fill="#475569" text-anchor="start">HTTP :8000 · health: GET /healthz</text>
+<text x="887" y="560" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">DNS</text>
+<text x="887" y="573" font-size="10" font-weight="400" fill="#475569" text-anchor="start">video-upload-portal-…elb.amazonaws.com</text>
+<rect x="1275" y="420" width="380" height="320" rx="12" fill="#fefce8" stroke="#b45309" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1275" y="420" width="6" height="320" rx="2" fill="#b45309"/>
+<text x="1297" y="444" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">EventBridge wiring</text>
+<text x="1641" y="444" font-size="10" font-weight="600" fill="#b45309" text-anchor="end">1 bus notif · 2 rules · 4 targets · 4 perms</text>
+<text x="1297" y="470" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">s3_bucket_notification.videos_eventbridge</text>
+<text x="1297" y="483" font-size="10" font-weight="400" fill="#475569" text-anchor="start">bucket → default event bus</text>
+<text x="1297" y="500" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">rule: video_uploaded</text>
+<text x="1297" y="513" font-size="10" font-weight="400" fill="#475569" text-anchor="start">raw-videos/* uploads</text>
+<text x="1297" y="530" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  → start_clip_embed · start_frame_task · start_yolo_task</text>
+<text x="1297" y="543" font-size="10" font-weight="400" fill="#475569" text-anchor="start">three parallel pipelines</text>
+<text x="1297" y="560" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">rule: clip_output_ready</text>
+<text x="1297" y="573" font-size="10" font-weight="400" fill="#475569" text-anchor="start">embeddings/videos/*/output.json</text>
+<text x="1297" y="590" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  → finalize_clip_embed</text>
+<text x="1297" y="603" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Marengo async job has landed</text>
+<text x="1297" y="620" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">4 × lambda_permission</text>
+<text x="1297" y="633" font-size="10" font-weight="400" fill="#475569" text-anchor="start">events.amazonaws.com:InvokeFunction</text>
+<text x="1297" y="650" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">4 × event_target</text>
+<text x="1297" y="663" font-size="10" font-weight="400" fill="#475569" text-anchor="start">rule → lambda mappings</text>
+<rect x="45" y="770" width="380" height="290" rx="12" fill="#ecfdf5" stroke="#047857" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="45" y="770" width="6" height="290" rx="2" fill="#047857"/>
+<text x="67" y="794" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">S3 storage</text>
+<text x="411" y="794" font-size="10" font-weight="600" fill="#047857" text-anchor="end">1 bucket · 5 settings · 4 prefix objects</text>
+<text x="67" y="820" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">s3_bucket.videos</text>
+<text x="67" y="833" font-size="10" font-weight="400" fill="#475569" text-anchor="start">video-upload-portal-14c0f02f</text>
+<text x="67" y="850" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">cors / sse / public-access-block / ownership / notification</text>
+<text x="67" y="863" font-size="10" font-weight="400" fill="#475569" text-anchor="start">5 sub-resources hardening the bucket</text>
+<text x="67" y="880" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">prefix objects (managed)</text>
+<text x="67" y="893" font-size="10" font-weight="400" fill="#475569" text-anchor="start">raw-videos/  video-clips/  frames/  detections/</text>
+<text x="67" y="910" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">prefixes used by code (implicit)</text>
+<text x="67" y="923" font-size="10" font-weight="400" fill="#475569" text-anchor="start">embeddings/videos/   embeddings/frames/</text>
+<text x="67" y="953" font-size="10" font-weight="400" fill="#475569" text-anchor="start">derived/clips/        models/yolo/</text>
+<text x="67" y="970" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">encryption</text>
+<text x="67" y="983" font-size="10" font-weight="400" fill="#475569" text-anchor="start">AES256 SSE · public access fully blocked</text>
+<rect x="455" y="770" width="380" height="290" rx="12" fill="#fef2f2" stroke="#b91c1c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="455" y="770" width="6" height="290" rx="2" fill="#b91c1c"/>
+<text x="477" y="794" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">RDS Postgres</text>
+<text x="821" y="794" font-size="10" font-weight="600" fill="#b91c1c" text-anchor="end">1 instance · 1 subnet group · 1 param group</text>
+<text x="477" y="820" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">db_instance.postgres</text>
+<text x="477" y="833" font-size="10" font-weight="400" fill="#475569" text-anchor="start">port 5432 · db: portal · pgvector + HNSW</text>
+<text x="477" y="850" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">db_subnet_group.postgres</text>
+<text x="477" y="863" font-size="10" font-weight="400" fill="#475569" text-anchor="start">spans both public subnets</text>
+<text x="477" y="880" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">db_parameter_group.postgres</text>
+<text x="477" y="893" font-size="10" font-weight="400" fill="#475569" text-anchor="start">tweaks for pgvector</text>
+<text x="477" y="910" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">tables (created by /api/migrate)</text>
+<text x="477" y="923" font-size="10" font-weight="400" fill="#475569" text-anchor="start">videos · embeddings · clip_descriptions · frame_detections</text>
+<text x="477" y="940" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">driver</text>
+<text x="477" y="953" font-size="10" font-weight="400" fill="#475569" text-anchor="start">psycopg in portal app · pg8000 in lambdas</text>
+<rect x="865" y="770" width="380" height="290" rx="12" fill="#fefce8" stroke="#b45309" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="865" y="770" width="6" height="290" rx="2" fill="#b45309"/>
+<text x="887" y="794" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Secrets Manager</text>
+<text x="1231" y="794" font-size="10" font-weight="600" fill="#b45309" text-anchor="end">2 secrets · 2 versions · 3 randoms</text>
+<text x="887" y="820" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">secret.db</text>
+<text x="887" y="833" font-size="10" font-weight="400" fill="#475569" text-anchor="start">{host, port, dbname, username, password, url}</text>
+<text x="887" y="850" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">secret_version.db</text>
+<text x="887" y="863" font-size="10" font-weight="400" fill="#475569" text-anchor="start">JSON payload</text>
+<text x="887" y="880" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">secret.portal_token</text>
+<text x="887" y="893" font-size="10" font-weight="400" fill="#475569" text-anchor="start">shared bearer for the upload UI</text>
+<text x="887" y="910" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">secret_version.portal_token</text>
+<text x="887" y="923" font-size="10" font-weight="400" fill="#475569" text-anchor="start">string payload</text>
+<text x="887" y="940" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">random_password.db / .portal_token</text>
+<text x="887" y="953" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Terraform-generated</text>
+<text x="887" y="970" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">random_id.suffix</text>
+<text x="887" y="983" font-size="10" font-weight="400" fill="#475569" text-anchor="start">8-char bucket name uniquifier</text>
+<rect x="1275" y="770" width="380" height="290" rx="12" fill="#f1f5f9" stroke="#334155" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1275" y="770" width="6" height="290" rx="2" fill="#334155"/>
+<text x="1297" y="794" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">CloudWatch log groups</text>
+<text x="1641" y="794" font-size="10" font-weight="600" fill="#334155" text-anchor="end">9 groups · retention 14d each</text>
+<text x="1297" y="820" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/ecs/video-upload-portal</text>
+<text x="1297" y="833" font-size="10" font-weight="400" fill="#475569" text-anchor="start">portal FastAPI</text>
+<text x="1297" y="850" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/ecs/…-frame-worker</text>
+<text x="1297" y="863" font-size="10" font-weight="400" fill="#475569" text-anchor="start">frame-embed-worker stdout</text>
+<text x="1297" y="880" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/ecs/…-clip-pegasus-worker</text>
+<text x="1297" y="893" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Pegasus worker (per-clip progress)</text>
+<text x="1297" y="910" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/ecs/…-yolo-detect-worker</text>
+<text x="1297" y="923" font-size="10" font-weight="400" fill="#475569" text-anchor="start">YOLO predictions</text>
+<text x="1297" y="940" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/aws/lambda/…-start-clip-embed</text>
+<text x="1297" y="957" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/aws/lambda/…-finalize-clip-embed</text>
+<text x="1297" y="974" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/aws/lambda/…-start-frame-task</text>
+<text x="1297" y="991" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">/aws/lambda/…-start-yolo-task</text>
+<rect x="45" y="1090" width="1610" height="230" rx="12" fill="#f1f5f9" stroke="#334155" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="45" y="1090" width="6" height="230" rx="2" fill="#334155"/>
+<text x="67" y="1114" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">IAM roles + policies</text>
+<text x="1641" y="1114" font-size="10" font-weight="600" fill="#334155" text-anchor="end">14 roles · 9 inline policies · 5 managed-policy attachments</text>
+<text x="67" y="1140" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">Lambda exec roles (4)</text>
+<text x="67" y="1153" font-size="10" font-weight="400" fill="#475569" text-anchor="start">trust: lambda.amazonaws.com</text>
+<text x="67" y="1170" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  start_clip_embed</text>
+<text x="67" y="1183" font-size="10" font-weight="400" fill="#475569" text-anchor="start">AWSLambdaBasicExecution + VPCAccess + custom (Bedrock async, S3, secret)</text>
+<text x="67" y="1200" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  finalize_clip_embed</text>
+<text x="67" y="1213" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Basic + VPCAccess + custom (S3 read, secret, ECS RunTask, IAM PassRole)</text>
+<text x="67" y="1230" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  start_frame_task</text>
+<text x="67" y="1243" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Basic + custom (ECS RunTask + PassRole)</text>
+<text x="67" y="1260" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  start_yolo_task</text>
+<text x="67" y="1273" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Basic + custom (ECS RunTask + PassRole)</text>
+<text x="850" y="1140" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">ECS task roles (4 task + 4 execution)</text>
+<text x="850" y="1153" font-size="10" font-weight="400" fill="#475569" text-anchor="start">trust: ecs-tasks.amazonaws.com</text>
+<text x="850" y="1170" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  task / task_execution</text>
+<text x="850" y="1183" font-size="10" font-weight="400" fill="#475569" text-anchor="start">portal app — Bedrock Marengo invoke + S3 + secret</text>
+<text x="850" y="1200" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  frame_worker_task / _execution</text>
+<text x="850" y="1213" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Bedrock Marengo image + S3 read/write + secret</text>
+<text x="850" y="1230" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  clip_pegasus_worker_task / _execution</text>
+<text x="850" y="1243" font-size="10" font-weight="400" fill="#475569" text-anchor="start">Bedrock Pegasus invoke + invoke-stream + S3 + secret + STS</text>
+<text x="850" y="1260" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">  yolo_detect_worker_task / _execution</text>
+<text x="850" y="1273" font-size="10" font-weight="400" fill="#475569" text-anchor="start">S3 read frames + S3 read models + secret</text>
+<text x="45" y="1330" font-size="12" font-weight="400" fill="#64748b" text-anchor="start">Lifecycle: S3 raw-videos/ upload → EventBridge fan-out → 3 Lambdas → 3 Fargate workers + Bedrock async → RDS (embeddings, clip_descriptions, frame_detections) → portal ALB renders results.</text>
+</svg>

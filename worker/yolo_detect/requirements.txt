@@ -1,0 +1,21 @@
+# Pinned for the CPU-only Fargate worker. We rely on the PyTorch CPU wheel
+# index for torch/torchvision so the image stays under ~2 GB and CPU
+# inference doesn't pull CUDA libs.
+#
+# torch + ultralytics versions track the sister pld-yolo project so the
+# .pt checkpoints (trained with YOLO26 / Segment26 heads) deserialize
+# cleanly. Older ultralytics raises AttributeError: Can't get attribute
+# 'Segment26' on the head module.
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.11.0+cpu
+torchvision==0.26.0+cpu
+
+ultralytics==8.4.41
+opencv-python-headless==4.10.0.84
+numpy==2.1.3
+Pillow==11.0.0
+
+boto3==1.35.36
+psycopg[binary]==3.2.3

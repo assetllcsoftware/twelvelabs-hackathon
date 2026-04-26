@@ -5,6 +5,8 @@
   const els = {
     nav: document.getElementById('categoryNav'),
     toolNav: document.getElementById('toolNav'),
+    searchNav: document.getElementById('searchNav'),
+    contentHeader: document.querySelector('.content-header'),
     title: document.getElementById('categoryTitle'),
     description: document.getElementById('categoryDescription'),
     categoryView: document.getElementById('categoryView'),
@@ -15,6 +17,26 @@
     youtubeSubmit: document.getElementById('youtubeSubmit'),
     youtubeJobList: document.getElementById('youtubeJobList'),
     youtubeEmpty: document.getElementById('youtubeEmpty'),
+    searchView: document.getElementById('searchView'),
+    searchForm: document.getElementById('searchForm'),
+    searchQuery: document.getElementById('searchQuery'),
+    searchTextLabel: document.getElementById('searchTextLabel'),
+    searchModes: document.getElementById('searchModes'),
+    searchModeHint: document.getElementById('searchModeHint'),
+    searchDropzone: document.getElementById('searchDropzone'),
+    searchFileInput: document.getElementById('searchFileInput'),
+    searchDzStatus: document.getElementById('searchDzStatus'),
+    searchDzPreview: document.getElementById('searchDzPreview'),
+    searchTopK: document.getElementById('searchTopK'),
+    searchSubmit: document.getElementById('searchSubmit'),
+    searchSpinner: document.getElementById('searchSpinner'),
+    searchError: document.getElementById('searchError'),
+    searchStats: document.getElementById('searchStats'),
+    searchResults: document.getElementById('searchResults'),
+    detectionControls: document.getElementById('detectionControls'),
+    detectionMaster: document.getElementById('detectionMaster'),
+    detectionClasses: document.getElementById('detectionClasses'),
+    detectionEmpty: document.getElementById('detectionEmpty'),
     dropzone: document.getElementById('dropzone'),
     fileInput: document.getElementById('fileInput'),
     chooseButton: document.getElementById('chooseButton'),
@@ -74,6 +96,20 @@
       jobs: new Map(), // id -> job
       pollTimer: null,
       hasPending: false,
+    },
+    embedSearch: {
+      mode: 'text',
+      file: null,
+      previewUrl: null,
+      lastResults: [],
+      busy: false,
+    },
+    detections: {
+      master: true,
+      // class_name -> { color, on, count }
+      byClass: new Map(),
+      loadedAt: 0,
+      models: [],
     },
   };
 
@@ -138,16 +174,13 @@
       button.addEventListener('click', () => setActiveCategory(cat.id));
       els.nav.appendChild(button);
     }
-    if (els.toolNav) {
-      const buttons = els.toolNav.querySelectorAll('[data-tool-id]');
-      buttons.forEach((btn) => {
-        if (state.activeView === 'tool' && btn.dataset.toolId === state.activeToolId) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-    }
+    document.querySelectorAll('[data-tool-id]').forEach((btn) => {
+      if (state.activeView === 'tool' && btn.dataset.toolId === state.activeToolId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
   }
 
   function updateSidebarCounts() {
@@ -180,18 +213,28 @@
     if (els.search) els.search.value = '';
     renderSidebar();
     renderHeader();
+    window.scrollTo({ top: 0, behavior: 'auto' });
     if (id === 'youtube') {
       refreshYoutubeJobs();
+    } else if (id === 'search') {
+      refreshSearchStats();
+      refreshDetectionClasses().catch(() => {});
+      syncSearchModeUI();
     }
   }
 
   function renderHeader() {
     const isCategory = state.activeView === 'category';
+    const isSearchTool = state.activeView === 'tool' && state.activeToolId === 'search';
     if (els.categoryView) els.categoryView.hidden = !isCategory;
     if (els.youtubeView) els.youtubeView.hidden = isCategory || state.activeToolId !== 'youtube';
+    if (els.searchView) els.searchView.hidden = isCategory || state.activeToolId !== 'search';
     if (els.searchBox) els.searchBox.hidden = !isCategory;
     if (els.refresh) {
-      els.refresh.hidden = false;
+      els.refresh.hidden = isSearchTool;
+    }
+    if (els.contentHeader) {
+      els.contentHeader.hidden = isSearchTool;
     }
 
     if (isCategory) {
@@ -208,6 +251,9 @@
     if (state.activeToolId === 'youtube') {
       els.title.textContent = 'YouTube Ingest';
       els.description.textContent = 'Pull videos via yt-dlp and stream them into raw-videos/';
+    } else if (state.activeToolId === 'search') {
+      els.title.textContent = 'Multimodal Search';
+      els.description.textContent = 'Marengo Embed 3.0 over the embedded video corpus';
     }
   }
 
@@ -1286,6 +1332,8 @@
     els.refresh.addEventListener('click', () => {
       if (state.activeView === 'tool' && state.activeToolId === 'youtube') {
         refreshYoutubeJobs();
+      } else if (state.activeView === 'tool' && state.activeToolId === 'search') {
+        refreshSearchStats();
       } else {
         loadFiles();
       }
@@ -1298,15 +1346,15 @@
       });
     }
 
-    if (els.toolNav) {
-      els.toolNav.querySelectorAll('[data-tool-id]').forEach((btn) => {
-        btn.addEventListener('click', () => setActiveTool(btn.dataset.toolId));
-      });
-    }
+    document.querySelectorAll('[data-tool-id]').forEach((btn) => {
+      btn.addEventListener('click', () => setActiveTool(btn.dataset.toolId));
+    });
 
     if (els.youtubeForm) {
       els.youtubeForm.addEventListener('submit', handleYoutubeSubmit);
     }
+
+    bindSearchEvents();
 
     els.modal.addEventListener('click', (e) => {
       const target = e.target.closest('[data-action="close"]');
@@ -1331,6 +1379,519 @@
     });
   }
 
+  /* ------------------------------------------------------------------ */
+  /* Multimodal search                                                  */
+  /* ------------------------------------------------------------------ */
+
+  const SEARCH_MODE_HINT = {
+    'text':       'Describe what you want to find. The full corpus will be ranked by cosine similarity.',
+    'image':      'Drop a frame and Marengo will rank the corpus by visual similarity.',
+    'text-image': 'Combine a text description with a reference image. Both contribute to the query vector.',
+  };
+
+  // Cosine on Marengo Embed 3.0 typically lands in these bands. They're a
+  // cosmetic hint at relative confidence — there is no hard floor, so even
+  // sub-0.15 hits get the neutral "RANKED" label rather than scary "NOISE".
+  function searchBandFor(score) {
+    if (score >= 0.5)  return { tier: 'strong', label: 'STRONG' };
+    if (score >= 0.3)  return { tier: 'good',   label: 'GOOD' };
+    if (score >= 0.15) return { tier: 'weak',   label: 'WEAK' };
+    return                    { tier: 'weak',   label: 'RANKED' };
+  }
+
+  function formatScore(score) {
+    const sign = score >= 0 ? '+' : '';
+    return `${sign}${(+score).toFixed(4)}`;
+  }
+
+  function formatRange(a, b) {
+    return `${(+a).toFixed(1)}s — ${(+b).toFixed(1)}s`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function syncSearchModeUI() {
+    if (!els.searchModes) return;
+    const mode = state.embedSearch.mode;
+    els.searchModes.querySelectorAll('.search-mode').forEach((b) => {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    if (els.searchModeHint) els.searchModeHint.textContent = SEARCH_MODE_HINT[mode] || '';
+    const showText  = mode === 'text' || mode === 'text-image';
+    const showImage = mode === 'image' || mode === 'text-image';
+    if (els.searchTextLabel) els.searchTextLabel.style.display = showText ? '' : 'none';
+    if (els.searchDropzone)  els.searchDropzone.classList.toggle('hidden', !showImage);
+  }
+
+  function setSearchBusy(busy) {
+    state.embedSearch.busy = busy;
+    if (els.searchSubmit)  els.searchSubmit.disabled = busy;
+    if (els.searchSpinner) els.searchSpinner.hidden = !busy;
+  }
+
+  function showSearchError(msg) {
+    if (!els.searchError) return;
+    els.searchError.textContent = msg || '';
+    els.searchError.hidden = !msg;
+  }
+
+  function setSearchFile(file) {
+    if (state.embedSearch.previewUrl) {
+      try { URL.revokeObjectURL(state.embedSearch.previewUrl); } catch (_) {}
+    }
+    state.embedSearch.file = file || null;
+    if (!file) {
+      state.embedSearch.previewUrl = null;
+      if (els.searchDzStatus)  els.searchDzStatus.textContent = 'no image';
+      if (els.searchDzPreview) {
+        els.searchDzPreview.hidden = true;
+        els.searchDzPreview.removeAttribute('src');
+      }
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      showSearchError('please drop an image');
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    state.embedSearch.previewUrl = url;
+    if (els.searchDzStatus) {
+      els.searchDzStatus.textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KiB`;
+    }
+    if (els.searchDzPreview) {
+      els.searchDzPreview.src = url;
+      els.searchDzPreview.hidden = false;
+    }
+  }
+
+  async function refreshSearchStats() {
+    if (!els.searchStats) return;
+    try {
+      const stats = await api('/api/search/stats');
+      const parts = [];
+      parts.push(`videos ${stats.videos || 0}`);
+      parts.push(`clips ${stats.clips || 0}`);
+      parts.push(`frames ${stats.frames || 0}`);
+      parts.push(`model ${stats.model || '?'}`);
+      if (stats.status === 'disabled') parts.push('DB DISABLED');
+      else if (stats.status === 'error') parts.push(`DB ERROR: ${stats.detail || ''}`);
+      els.searchStats.textContent = parts.join(' · ');
+      const counter = document.querySelector('[data-count-for="tool-search"]');
+      if (counter) {
+        counter.textContent = String(stats.clips || 0).padStart(2, '0');
+      }
+    } catch (err) {
+      els.searchStats.textContent = `corpus: error — ${err.message}`;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function formatPegasusText(text) {
+    const trimmed = String(text || '').trim();
+    if (!trimmed) return '';
+    return escapeHtml(trimmed).replace(/\n+/g, '<br/>');
+  }
+
+  function renderPegasusInlineHtml(result) {
+    const peg = result && result.pegasus;
+    if (!peg || !peg.text) return '';
+    const preset = (peg.preset || 'inspector').toUpperCase();
+    const range = (Number.isFinite(peg.clip_start_sec) && Number.isFinite(peg.clip_end_sec))
+      ? `${Number(peg.clip_start_sec).toFixed(2)}–${Number(peg.clip_end_sec).toFixed(2)}s`
+      : '';
+    const inheritedTag = peg.inherited
+      ? `<span class="pegasus-inline-inherited">inherited from clip ${escapeHtml(range)}</span>`
+      : '';
+    return `
+      <div class="pegasus-inline">
+        <header>
+          <span class="pegasus-inline-tag">PEGASUS · ${escapeHtml(preset)}</span>
+          <span class="pegasus-inline-cached">CACHED ✓</span>
+          ${inheritedTag}
+        </header>
+        <div class="pegasus-inline-body">${formatPegasusText(peg.text)}</div>
+      </div>
+    `;
+  }
+
+  // ---- Detections (YOLO masks) ---------------------------------------------
+
+  function detectionColorFor(className) {
+    const entry = state.detections.byClass.get(className);
+    return entry ? entry.color : '#ff8c00';
+  }
+
+  function detectionClassOn(className) {
+    const entry = state.detections.byClass.get(className);
+    return entry ? !!entry.on : true;
+  }
+
+  function ensureClassEntry(className, color) {
+    if (!state.detections.byClass.has(className)) {
+      state.detections.byClass.set(className, {
+        color: color || '#ff8c00',
+        on: true,
+        count: 0,
+      });
+    }
+    return state.detections.byClass.get(className);
+  }
+
+  function renderDetectionChips() {
+    if (!els.detectionControls || !els.detectionClasses) return;
+    const classes = Array.from(state.detections.byClass.entries());
+    if (!classes.length) {
+      els.detectionControls.hidden = false;
+      els.detectionClasses.innerHTML = '';
+      if (els.detectionEmpty) els.detectionEmpty.hidden = false;
+      els.detectionMaster.hidden = true;
+      return;
+    }
+    if (els.detectionEmpty) els.detectionEmpty.hidden = true;
+    els.detectionMaster.hidden = false;
+    els.detectionControls.hidden = false;
+    els.detectionClasses.innerHTML = '';
+    for (const [name, info] of classes) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = `detection-chip${info.on ? ' on' : ''}`;
+      chip.dataset.className = name;
+      chip.style.setProperty('--cls-color', info.color);
+      chip.innerHTML = `
+        <span class="swatch"></span>
+        <span class="name">${escapeHtml(name)}</span>
+        <span class="count">${info.count || ''}</span>
+      `;
+      chip.addEventListener('click', () => {
+        info.on = !info.on;
+        chip.classList.toggle('on', info.on);
+        applyDetectionVisibility();
+      });
+      els.detectionClasses.appendChild(chip);
+    }
+  }
+
+  function applyDetectionVisibility() {
+    const master = !!state.detections.master;
+    document.querySelectorAll('.search-thumb-wrap').forEach((wrap) => {
+      wrap.dataset.detections = master ? 'on' : 'off';
+    });
+    document.querySelectorAll('.search-thumb-wrap polygon[data-class]').forEach((poly) => {
+      const cls = poly.dataset.class;
+      poly.dataset.classOn = detectionClassOn(cls) ? 'true' : 'false';
+    });
+  }
+
+  async function refreshDetectionClasses() {
+    if (!els.detectionControls) return;
+    let payload;
+    try {
+      payload = await api('/api/detection-classes');
+    } catch (err) {
+      els.detectionControls.hidden = true;
+      return;
+    }
+    const classes = (payload && payload.classes) || [];
+    state.detections.models = (payload && payload.models) || [];
+    // Preserve existing on/off state if user has been toggling.
+    const prev = state.detections.byClass;
+    const next = new Map();
+    for (const c of classes) {
+      const existing = prev.get(c.class_name);
+      next.set(c.class_name, {
+        color: c.color || (existing && existing.color) || '#ff8c00',
+        on: existing ? existing.on : true,
+        count: c.count || 0,
+      });
+    }
+    state.detections.byClass = next;
+    state.detections.loadedAt = Date.now();
+    renderDetectionChips();
+    applyDetectionVisibility();
+  }
+
+  function ingestResultDetectionClasses(results) {
+    // Make sure any class returned in results is registered in the chip
+    // strip even if the catalogue endpoint hasn't been hit yet.
+    let added = false;
+    for (const r of results || []) {
+      for (const d of r.detections || []) {
+        if (!state.detections.byClass.has(d.class_name)) {
+          state.detections.byClass.set(d.class_name, {
+            color: d.color || '#ff8c00',
+            on: true,
+            count: 0,
+          });
+          added = true;
+        }
+      }
+    }
+    if (added) renderDetectionChips();
+  }
+
+  function renderDetectionOverlay(detections) {
+    if (!detections || !detections.length) return '';
+    const polygons = [];
+    for (const d of detections) {
+      const poly = d.polygon_xy;
+      if (!poly || poly.length < 6) continue;
+      const points = [];
+      for (let i = 0; i + 1 < poly.length; i += 2) {
+        points.push(`${Number(poly[i]).toFixed(5)},${Number(poly[i + 1]).toFixed(5)}`);
+      }
+      const color = d.color || detectionColorFor(d.class_name);
+      const titleLines = [
+        `${d.class_name} (${(d.confidence * 100).toFixed(1)}%)`,
+        d.model_name ? `model: ${d.model_name}` : '',
+      ].filter(Boolean).join(' · ');
+      const maskOnlyAttr = d.mask_only ? ' data-mask-only="true"' : '';
+      polygons.push(
+        `<polygon data-class="${escapeHtml(d.class_name)}" data-class-on="${detectionClassOn(d.class_name) ? 'true' : 'false'}"${maskOnlyAttr} style="--cls-color:${color}" points="${points.join(' ')}"><title>${escapeHtml(titleLines)}</title></polygon>`
+      );
+    }
+    if (!polygons.length) return '';
+    return `<svg class="detections" viewBox="0 0 1 1" preserveAspectRatio="none">${polygons.join('')}</svg>`;
+  }
+
+  function renderDetectionSummary(detections) {
+    if (!detections || !detections.length) return '';
+    const counts = new Map();
+    for (const d of detections) {
+      counts.set(d.class_name, (counts.get(d.class_name) || 0) + 1);
+    }
+    const parts = Array.from(counts.entries()).map(([name, n]) => {
+      const color = detectionColorFor(name);
+      return `<span class="detection-summary-pill" style="--cls-color:${color}">${escapeHtml(name)} ×${n}</span>`;
+    });
+    return `<div class="detection-summary">${parts.join('')}</div>`;
+  }
+
+  function renderSearchResults(results) {
+    if (!els.searchResults) return;
+    state.embedSearch.lastResults = results || [];
+    ingestResultDetectionClasses(results);
+    if (!results || !results.length) {
+      els.searchResults.innerHTML = '<div class="search-empty">no matches — once Lambdas populate the table, results show here</div>';
+      return;
+    }
+    els.searchResults.innerHTML = '';
+
+    // Confidence banner: based on top score and the spread of the top results.
+    const top = Number(results[0].score);
+    const last = Number(results[results.length - 1].score);
+    const spread = top - last;
+    const band = searchBandFor(top);
+    const spreadHint = spread < 0.02
+      ? 'Score spread is tiny — ranking among these is essentially flat.'
+      : `Score spread across these ${results.length}: ${spread.toFixed(4)}.`;
+    const bannerCopy = band.tier === 'weak'
+      ? `Top score ${formatScore(top)}. ${spreadHint}`
+      : `Top score ${formatScore(top)}. ${spreadHint}`;
+
+    const banner = document.createElement('div');
+    banner.className = `search-confidence band-${band.tier}`;
+    banner.innerHTML = `<span class="tier">${band.label}</span><span class="msg"></span>`;
+    banner.querySelector('.msg').textContent = bannerCopy;
+    els.searchResults.appendChild(banner);
+
+    results.forEach((r, i) => {
+      const card = document.createElement('article');
+      card.className = 'search-result-card';
+      const score = Number(r.score);
+      const cardBand = searchBandFor(score);
+      const kind = (r.kind || 'clip').toUpperCase();
+      const opt  = (r.embedding_option || 'visual').toUpperCase();
+      const ts   = Number(r.timestamp_sec);
+
+      let context;
+      if (r.kind === 'frame') {
+        context = `FRAME @ <span class="accent">${ts.toFixed(2)}s</span>`;
+      } else if (r.refined_from_frame) {
+        context = `CLIP <span class="accent">${formatRange(r.start_sec, r.end_sec)}</span> · best frame @ <span class="accent">${ts.toFixed(2)}s</span>`;
+      } else {
+        context = `CLIP <span class="accent">${formatRange(r.start_sec, r.end_sec)}</span>`;
+      }
+
+      const overlayHtml = renderDetectionOverlay(r.detections || []);
+      const masterAttr = state.detections.master ? 'on' : 'off';
+      const thumbHtml = r.thumb_url
+        ? `
+          <div class="search-thumb-wrap" data-detections="${masterAttr}">
+            <img class="search-thumb" src="${r.thumb_url}" alt="matched frame" loading="lazy" />
+            ${overlayHtml}
+          </div>
+        `
+        : '';
+
+      const pegasusHtml = renderPegasusInlineHtml(r);
+      const detectionSummaryHtml = renderDetectionSummary(r.detections || []);
+
+      card.innerHTML = `
+        <header class="search-meta">
+          <span class="rank">#${i + 1}</span>
+          <span class="score band-${cardBand.tier}" title="${cardBand.label}">${formatScore(score)}</span>
+          <span class="kind kind-${r.kind || 'clip'}">${kind}</span>
+          <span class="opt">${opt}</span>
+        </header>
+        ${thumbHtml}
+        ${detectionSummaryHtml}
+        <video controls preload="metadata" playsinline></video>
+        ${pegasusHtml}
+        <div class="search-info">
+          <span class="key"></span>
+          <span class="seg"></span>
+          <div class="links">
+            <a href="${r.presigned_url}" target="_blank" rel="noopener">OPEN ↗</a>
+            <a href="#" data-act="copy">COPY URL</a>
+          </div>
+        </div>
+      `;
+      card.querySelector('.key').textContent = r.s3_key;
+      card.querySelector('.seg').innerHTML = context;
+      const video = card.querySelector('video');
+      // Set src AFTER inserting so the #t fragment is honored on metadata load.
+      video.src = r.presigned_url;
+
+      const copyLink = card.querySelector('[data-act="copy"]');
+      copyLink.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        navigator.clipboard.writeText(r.presigned_url);
+        copyLink.textContent = 'COPIED ✓';
+        setTimeout(() => (copyLink.textContent = 'COPY URL'), 1200);
+      });
+
+      els.searchResults.appendChild(card);
+    });
+  }
+
+  async function handleSearchSubmit(event) {
+    event.preventDefault();
+    showSearchError('');
+    setSearchBusy(true);
+    try {
+      const top_k = Math.max(1, Math.min(50, parseInt(els.searchTopK.value, 10) || 10));
+      const mode = state.embedSearch.mode;
+      const q = (els.searchQuery && els.searchQuery.value || '').trim();
+      const file = state.embedSearch.file;
+      let resp;
+      if (mode === 'text') {
+        if (!q) throw new Error('enter a text query');
+        resp = await fetch('/api/search/text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q, top_k }),
+        });
+      } else if (mode === 'image') {
+        if (!file) throw new Error('drop or paste an image first');
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('top_k', String(top_k));
+        resp = await fetch('/api/search/image', { method: 'POST', body: fd });
+      } else {
+        if (!q) throw new Error('enter a text query');
+        if (!file) throw new Error('drop or paste an image first');
+        const fd = new FormData();
+        fd.append('q', q);
+        fd.append('file', file);
+        fd.append('top_k', String(top_k));
+        resp = await fetch('/api/search/text-image', { method: 'POST', body: fd });
+      }
+      if (!resp.ok) {
+        let detail;
+        try { detail = (await resp.json()).detail; } catch (_) { detail = resp.statusText; }
+        throw new Error(detail || `error ${resp.status}`);
+      }
+      const results = await resp.json();
+      renderSearchResults(results);
+    } catch (err) {
+      showSearchError(err.message || String(err));
+    } finally {
+      setSearchBusy(false);
+    }
+  }
+
+  function bindSearchEvents() {
+    if (!els.searchForm) return;
+    els.searchForm.addEventListener('submit', handleSearchSubmit);
+
+    if (els.searchModes) {
+      els.searchModes.addEventListener('click', (ev) => {
+        const btn = ev.target.closest('.search-mode');
+        if (!btn || !btn.dataset.mode) return;
+        state.embedSearch.mode = btn.dataset.mode;
+        syncSearchModeUI();
+      });
+    }
+
+    if (els.searchDropzone) {
+      ['dragenter', 'dragover'].forEach((evt) => {
+        els.searchDropzone.addEventListener(evt, (ev) => {
+          ev.preventDefault();
+          els.searchDropzone.classList.add('over');
+        });
+      });
+      ['dragleave', 'dragend'].forEach((evt) => {
+        els.searchDropzone.addEventListener(evt, () =>
+          els.searchDropzone.classList.remove('over')
+        );
+      });
+      els.searchDropzone.addEventListener('drop', (ev) => {
+        ev.preventDefault();
+        els.searchDropzone.classList.remove('over');
+        const file = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+        if (file) setSearchFile(file);
+      });
+      els.searchDropzone.addEventListener('click', () => els.searchFileInput && els.searchFileInput.click());
+    }
+
+    if (els.searchFileInput) {
+      els.searchFileInput.addEventListener('change', () => {
+        const f = els.searchFileInput.files && els.searchFileInput.files[0];
+        if (f) setSearchFile(f);
+      });
+    }
+
+    // Clipboard paste only when the search panel is active and we want an image.
+    window.addEventListener('paste', (ev) => {
+      if (state.activeView !== 'tool' || state.activeToolId !== 'search') return;
+      if (state.embedSearch.mode === 'text') return;
+      const items = (ev.clipboardData && ev.clipboardData.items) || [];
+      for (const item of items) {
+        if (item.type && item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) {
+            setSearchFile(file);
+            ev.preventDefault();
+          }
+          return;
+        }
+      }
+    });
+
+    syncSearchModeUI();
+
+    if (els.detectionMaster) {
+      els.detectionMaster.addEventListener('click', () => {
+        state.detections.master = !state.detections.master;
+        els.detectionMaster.classList.toggle('on', state.detections.master);
+        els.detectionMaster.dataset.on = state.detections.master ? 'true' : 'false';
+        const labelEl = els.detectionMaster.querySelector('.label');
+        if (labelEl) labelEl.textContent = state.detections.master ? 'Detections ON' : 'Detections OFF';
+        applyDetectionVisibility();
+      });
+    }
+  }
+
   async function loadInitialCounts() {
     await Promise.all(
       categories.map(async (cat) => {
@@ -1341,6 +1902,9 @@
       }),
     );
     updateSidebarCounts();
+    // Prime the Search tool sidebar count without forcing the user to click in.
+    refreshSearchStats().catch(() => {});
+    refreshDetectionClasses().catch(() => {});
   }
 
   renderSidebar();

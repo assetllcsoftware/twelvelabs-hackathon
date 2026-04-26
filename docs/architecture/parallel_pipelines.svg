@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 860" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#475569"/></marker></defs>
+<rect width="1600" height="860" fill="#f8fafc"/>
+<text x="40" y="56" font-size="30" font-weight="800" fill="#0f172a" text-anchor="start">One video. Five pipelines in parallel.</text>
+<text x="40" y="84" font-size="14" font-weight="400" fill="#64748b" text-anchor="start">Find the clip · snap to the second · read the caption · see what's there.</text>
+<text x="140" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">VIDEO</text>
+<text x="415" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">PREP</text>
+<text x="715" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">AI MODEL</text>
+<text x="1015" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">INDEX</text>
+<text x="1380" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">WHAT THE USER SEES</text>
+<rect x="40" y="150" width="200" height="590" rx="14" fill="#0f172a"/>
+<text x="140" y="451" font-size="20" font-weight="700" fill="white" text-anchor="middle">Inspection video</text>
+<line x1="240" y1="213" x2="276" y2="213" stroke="#4338ca" stroke-width="2.2" marker-end="url(#arrow)" fill="none"/>
+<rect x="292" y="151" width="144" height="22" rx="11" fill="#4338ca"/>
+<text x="364" y="166" font-size="10" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.6">CLIP MATCH · Marengo</text>
+<rect x="444" y="151" width="38" height="22" rx="11" fill="white" stroke="#15803d" stroke-width="1.4"/>
+<text x="463" y="166" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle" letter-spacing="0.4">live</text>
+<rect x="280" y="181" width="270" height="64" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="280" y="181" width="6" height="64" rx="2" fill="#4338ca"/>
+<text x="300" y="218" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Hand the video to Bedrock</text>
+<rect x="580" y="181" width="270" height="64" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="580" y="181" width="6" height="64" rx="2" fill="#4338ca"/>
+<text x="600" y="218" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Embed every ~6s clip</text>
+<rect x="880" y="181" width="270" height="64" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="880" y="181" width="6" height="64" rx="2" fill="#4338ca"/>
+<text x="900" y="218" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Clip vectors</text>
+<rect x="1200" y="181" width="360" height="64" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1200" y="181" width="6" height="64" rx="2" fill="#4338ca"/>
+<text x="1220" y="218" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Top matching clips per search</text>
+<line x1="550" y1="213" x2="576" y2="213" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="850" y1="213" x2="876" y2="213" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="1150" y1="213" x2="1196" y2="213" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="240" y1="331" x2="276" y2="331" stroke="#0e7490" stroke-width="2.2" marker-end="url(#arrow)" fill="none"/>
+<rect x="292" y="269" width="144" height="22" rx="11" fill="#0e7490"/>
+<text x="364" y="284" font-size="10" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.6">FRAME SNAP · Marengo</text>
+<rect x="444" y="269" width="38" height="22" rx="11" fill="white" stroke="#15803d" stroke-width="1.4"/>
+<text x="463" y="284" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle" letter-spacing="0.4">live</text>
+<rect x="280" y="299" width="270" height="64" rx="10" fill="#ecfeff" stroke="#0e7490" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="280" y="299" width="6" height="64" rx="2" fill="#0e7490"/>
+<text x="300" y="336" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Sample 1 frame / second</text>
+<rect x="580" y="299" width="270" height="64" rx="10" fill="#ecfeff" stroke="#0e7490" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="580" y="299" width="6" height="64" rx="2" fill="#0e7490"/>
+<text x="600" y="336" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Embed every frame</text>
+<rect x="880" y="299" width="270" height="64" rx="10" fill="#ecfeff" stroke="#0e7490" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="880" y="299" width="6" height="64" rx="2" fill="#0e7490"/>
+<text x="900" y="336" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Frame vectors + thumbnails</text>
+<rect x="1200" y="299" width="360" height="64" rx="10" fill="#ecfeff" stroke="#0e7490" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1200" y="299" width="6" height="64" rx="2" fill="#0e7490"/>
+<text x="1220" y="336" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Jump to the right second</text>
+<line x1="550" y1="331" x2="576" y2="331" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="850" y1="331" x2="876" y2="331" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="1150" y1="331" x2="1196" y2="331" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="240" y1="449" x2="276" y2="449" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#arrow)" fill="none"/>
+<rect x="292" y="387" width="163" height="22" rx="11" fill="#7c3aed"/>
+<text x="374" y="402" font-size="10" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.6">CLIP CAPTIONS · Pegasus</text>
+<rect x="463" y="387" width="110" height="22" rx="11" fill="white" stroke="#b45309" stroke-width="1.4"/>
+<text x="518" y="402" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle" letter-spacing="0.4">live · pipe demo</text>
+<rect x="280" y="417" width="270" height="64" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="280" y="417" width="6" height="64" rx="2" fill="#7c3aed"/>
+<text x="300" y="454" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Cut each clip out</text>
+<rect x="580" y="417" width="270" height="64" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="580" y="417" width="6" height="64" rx="2" fill="#7c3aed"/>
+<text x="600" y="454" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Describe it in plain English</text>
+<rect x="880" y="417" width="270" height="64" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="880" y="417" width="6" height="64" rx="2" fill="#7c3aed"/>
+<text x="900" y="454" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Caption per clip</text>
+<rect x="1200" y="417" width="360" height="64" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1200" y="417" width="6" height="64" rx="2" fill="#7c3aed"/>
+<text x="1220" y="454" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Caption under every result</text>
+<line x1="550" y1="449" x2="576" y2="449" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="850" y1="449" x2="876" y2="449" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="1150" y1="449" x2="1196" y2="449" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="240" y1="567" x2="276" y2="567" stroke="#ea580c" stroke-width="2.2" marker-end="url(#arrow)" fill="none"/>
+<rect x="292" y="505" width="176" height="22" rx="11" fill="#ea580c"/>
+<text x="380" y="520" font-size="10" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.6">POWER-LINE OVERLAY · YOLO</text>
+<rect x="476" y="505" width="110" height="22" rx="11" fill="white" stroke="#b45309" stroke-width="1.4"/>
+<text x="531" y="520" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle" letter-spacing="0.4">awaiting weights</text>
+<rect x="280" y="535" width="270" height="64" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="280" y="535" width="6" height="64" rx="2" fill="#ea580c"/>
+<text x="300" y="572" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Read the frame thumbs</text>
+<rect x="580" y="535" width="270" height="64" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="580" y="535" width="6" height="64" rx="2" fill="#ea580c"/>
+<text x="600" y="572" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Find the power lines</text>
+<rect x="880" y="535" width="270" height="64" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="880" y="535" width="6" height="64" rx="2" fill="#ea580c"/>
+<text x="900" y="572" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Power-line shapes</text>
+<rect x="1200" y="535" width="360" height="64" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1200" y="535" width="6" height="64" rx="2" fill="#ea580c"/>
+<text x="1220" y="572" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Orange overlay on the frame</text>
+<line x1="550" y1="567" x2="576" y2="567" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="850" y1="567" x2="876" y2="567" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="1150" y1="567" x2="1196" y2="567" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="240" y1="685" x2="276" y2="685" stroke="#be185d" stroke-width="2.2" marker-end="url(#arrow)" fill="none"/>
+<rect x="292" y="623" width="214" height="22" rx="11" fill="#be185d"/>
+<text x="399" y="638" font-size="10" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.6">INSULATOR + POLE OVERLAY · YOLO</text>
+<rect x="514" y="623" width="110" height="22" rx="11" fill="white" stroke="#b45309" stroke-width="1.4"/>
+<text x="569" y="638" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle" letter-spacing="0.4">awaiting weights</text>
+<rect x="280" y="653" width="270" height="64" rx="10" fill="#fdf2f8" stroke="#be185d" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="280" y="653" width="6" height="64" rx="2" fill="#be185d"/>
+<text x="300" y="690" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Read the frame thumbs</text>
+<rect x="580" y="653" width="270" height="64" rx="10" fill="#fdf2f8" stroke="#be185d" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="580" y="653" width="6" height="64" rx="2" fill="#be185d"/>
+<text x="600" y="690" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Find insulators + poles</text>
+<rect x="880" y="653" width="270" height="64" rx="10" fill="#fdf2f8" stroke="#be185d" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="880" y="653" width="6" height="64" rx="2" fill="#be185d"/>
+<text x="900" y="690" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Insulator + pole shapes</text>
+<rect x="1200" y="653" width="360" height="64" rx="10" fill="#fdf2f8" stroke="#be185d" stroke-opacity="0.25" stroke-width="1"/>
+<rect x="1200" y="653" width="6" height="64" rx="2" fill="#be185d"/>
+<text x="1220" y="690" font-size="14" font-weight="600" fill="#0f172a" text-anchor="start">Cyan + pink overlay on the frame</text>
+<line x1="550" y1="685" x2="576" y2="685" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="850" y1="685" x2="876" y2="685" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+<line x1="1150" y1="685" x2="1196" y2="685" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)" fill="none"/>
+</svg>

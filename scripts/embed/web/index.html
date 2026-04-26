@@ -44,6 +44,19 @@
           </ul>
         </div>
 
+        <div class="panel detections" id="detectionsPanel" hidden>
+          <h2>Detections</h2>
+          <div class="det-master">
+            <label class="det-toggle">
+              <input type="checkbox" id="detMasterToggle" checked>
+              <span class="det-toggle-lbl">SHOW MASKS</span>
+            </label>
+            <span class="det-master-hint" id="detMasterHint">--</span>
+          </div>
+          <ul class="det-classes" id="detClasses"></ul>
+          <p class="det-hint" id="detEmptyHint" hidden>No cached YOLO detections. Run <code>scripts/yolo/run_local.py</code> from the pld-yolo pipenv to populate <code>data/yolo/</code>.</p>
+        </div>
+
         <div class="panel muted small">
           <h2>How</h2>
           <p>Each query hits Bedrock for a 512-d embedding, then dot-products against a normalized matrix of cached video segments. Results below open the matched segment via the <code>#t=</code> media fragment.</p>

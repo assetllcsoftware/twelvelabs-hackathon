@@ -91,3 +91,10 @@ variable "force_destroy_bucket" {
   type        = bool
   default     = true
 }
+
+variable "portal_token" {
+  description = "Shared bearer token for the upload portal. Set explicitly so it can be shared with hackathon judges; falls back to a random one when empty."
+  type        = string
+  default     = "geostl"
+  sensitive   = true
+}

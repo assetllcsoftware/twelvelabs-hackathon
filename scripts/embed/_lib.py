@@ -383,11 +383,24 @@ def extract_frames_with_ffmpeg(
     return out
 
 
-def build_segment_matrix(*, include_frames: bool = True):
+def build_segment_matrix(
+    *,
+    include_frames: bool = True,
+    clip_options: tuple[str, ...] = ("visual",),
+):
     """Read every cached video (and frame) embedding and return (matrix, meta).
 
     Matrix is L2-normalized so a dot product against a normalized query vector
     yields cosine similarity directly.
+
+    ``clip_options`` filters which clip-level ``embeddingOption`` rows
+    contribute to the matrix. Defaults to ``("visual",)`` because mixing
+    audio + transcription unfairly weighted any video that happened to be
+    embedded under all three options vs. ones cached as visual-only —
+    transcription/audio vectors would 3x the row count for narrated
+    videos and dominate the rankings. The dropped options are still
+    persisted in ``data/embeddings/*.json`` and can be re-enabled by
+    passing e.g. ``("visual", "audio", "transcription")``.
 
     Each ``meta`` row carries:
       - kind: "clip" | "frame"
@@ -401,11 +414,15 @@ def build_segment_matrix(*, include_frames: bool = True):
 
     rows: list[list[float]] = []
     meta: list[dict[str, Any]] = []
+    allowed_clip_options = set(clip_options) if clip_options else None
 
     for video in iter_cached_videos():
         for idx, segment in enumerate(video.get("segments", []) or []):
             embedding = segment.get("embedding")
             if not embedding or len(embedding) != 512:
+                continue
+            option = segment.get("embeddingOption", "visual")
+            if allowed_clip_options is not None and option not in allowed_clip_options:
                 continue
             start = float(segment.get("startSec", 0.0))
             end = float(segment.get("endSec", 0.0))

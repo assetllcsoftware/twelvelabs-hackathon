@@ -36,6 +36,13 @@ resource "random_password" "portal_token" {
   special = false
 }
 
+locals {
+  # Use the explicit var when set; otherwise fall back to the random one so
+  # a fresh `terraform apply` without overrides still produces a working
+  # secret.
+  portal_token_value = var.portal_token != "" ? var.portal_token : random_password.portal_token.result
+}
+
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
@@ -153,7 +160,7 @@ resource "aws_secretsmanager_secret" "portal_token" {
 
 resource "aws_secretsmanager_secret_version" "portal_token" {
   secret_id     = aws_secretsmanager_secret.portal_token.id
-  secret_string = random_password.portal_token.result
+  secret_string = local.portal_token_value
 }
 
 resource "aws_ecr_repository" "app" {
@@ -241,12 +248,56 @@ data "aws_iam_policy_document" "task_s3" {
     ]
     resources = [for p in local.prefixes : "${aws_s3_bucket.videos.arn}/${p}*"]
   }
+
+  # The search path needs to presign URLs for frame thumbs (PUT by the
+  # frame-embed worker) and for Bedrock async clip output (PUT by Bedrock).
+  # Both live under embeddings/. Read-only is enough — the portal never
+  # writes to those prefixes itself.
+  statement {
+    sid       = "ReadEmbeddingsArtifacts"
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.videos.arn}/embeddings/*"]
+  }
 }
 
 resource "aws_iam_role_policy" "task_s3" {
   name   = "${var.project_name}-s3-portal"
   role   = aws_iam_role.task.id
   policy = data.aws_iam_policy_document.task_s3.json
+}
+
+# --- Bedrock InvokeModel for /api/search/* (Phase D.2) ---
+#
+# We use the cross-region inference profile id (`us.twelvelabs....`) at
+# call time, so the task role needs permission on:
+#   * the inference-profile ARN itself, and
+#   * the underlying foundation-model ARN in every region the profile may
+#     route to. The `us.` profile spans us-east-1 / us-east-2 / us-west-2;
+#     we use a `*` region wildcard to keep the policy short and to avoid
+#     having to chase AWS's region list when they expand the profile.
+
+data "aws_caller_identity" "current" {}
+
+locals {
+  marengo_model_id     = "twelvelabs.marengo-embed-3-0-v1:0"
+  marengo_inference_id = "us.twelvelabs.marengo-embed-3-0-v1:0"
+}
+
+data "aws_iam_policy_document" "task_bedrock_invoke" {
+  statement {
+    sid     = "InvokeMarengoForSearch"
+    actions = ["bedrock:InvokeModel"]
+    resources = [
+      "arn:aws:bedrock:*::foundation-model/${local.marengo_model_id}",
+      "arn:aws:bedrock:${var.aws_region}:${data.aws_caller_identity.current.account_id}:inference-profile/${local.marengo_inference_id}",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "task_bedrock_invoke" {
+  name   = "${var.project_name}-bedrock-invoke"
+  role   = aws_iam_role.task.id
+  policy = data.aws_iam_policy_document.task_bedrock_invoke.json
 }
 
 resource "aws_security_group" "alb" {
@@ -378,6 +429,17 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "PORTAL_CATEGORIES"
           value = join(",", local.category_ids)
+        },
+        {
+          name  = "RUN_MIGRATIONS"
+          value = "1"
+        },
+        {
+          # Same JSON the yolo-detect worker consumes. Reused here so the
+          # search API can surface per-model UI hints (mask_only) without a
+          # separate config.
+          name  = "YOLO_MODELS"
+          value = var.yolo_detect_models_json
         }
       ]
 
@@ -385,6 +447,13 @@ resource "aws_ecs_task_definition" "app" {
         {
           name      = "UPLOAD_PORTAL_TOKEN"
           valueFrom = aws_secretsmanager_secret.portal_token.arn
+        },
+        {
+          # Pulls the `url` JSON key out of the DB secret. ECS does the
+          # parsing using the task execution role; the container only sees
+          # a plain libpq URL via env.
+          name      = "DATABASE_URL"
+          valueFrom = "${aws_secretsmanager_secret.db.arn}:url::"
         }
       ]
 

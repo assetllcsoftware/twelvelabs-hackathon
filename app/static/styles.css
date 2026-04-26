@@ -338,6 +338,24 @@ input, button, select { font-family: inherit; font-size: inherit; color: inherit
   background: var(--accent);
   color: var(--accent-ink);
 }
+.category-button--primary {
+  border-color: var(--accent);
+  background: rgba(255, 203, 0, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 203, 0, 0.18);
+}
+.category-button--primary .label {
+  color: var(--accent);
+  font-size: 0.86rem;
+  letter-spacing: 0.12em;
+}
+.category-button--primary .icon-wrap {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.category-button--primary:hover {
+  background: rgba(255, 203, 0, 0.12);
+}
 .category-button .count {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -1369,4 +1387,513 @@ input, button, select { font-family: inherit; font-size: inherit; color: inherit
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------------
+   Multimodal Search panel (Phase D.2)
+   ------------------------------------------------------------------------ */
+
+.search-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.search-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.search-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.search-card-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+.search-card-header .muted {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+.search-modes {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.search-mode {
+  border: 1px solid var(--border-dim);
+  background: transparent;
+  color: var(--muted);
+  padding: 0.4rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+.search-mode:hover { color: var(--text); border-color: var(--border); }
+.search-mode.active {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.search-mode-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.search-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.search-label > span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid var(--border);
+  background: #000;
+  padding: 0.55rem 0.75rem;
+  transition: border-color 120ms ease;
+}
+.search-input:focus-within { border-color: var(--accent); }
+.search-input .icon { color: var(--muted); width: 16px; height: 16px; }
+.search-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.search-dropzone {
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.search-dropzone.over { border-color: var(--accent); background: rgba(255, 203, 0, 0.06); }
+.search-dropzone.hidden { display: none; }
+.search-dropzone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+}
+.search-dropzone-inner .icon { color: var(--accent); }
+.search-dropzone-inner p {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+.search-dz-preview {
+  max-width: 200px;
+  max-height: 140px;
+  margin-top: 0.6rem;
+  border: 1px solid var(--border);
+}
+
+.search-form-actions {
+  display: flex;
+  align-items: end;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+.search-topk {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.search-topk input {
+  width: 80px;
+  border: 1px solid var(--border);
+  background: #000;
+  color: var(--text);
+  padding: 0.45rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.search-topk input:focus { outline: none; border-color: var(--accent); }
+.search-spinner {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.search-error {
+  padding: 0.65rem 0.85rem;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  color: #ffd6d6;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.search-stats {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.search-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.search-empty {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  border: 1px dashed var(--border-dim);
+  background: var(--surface-soft);
+}
+
+.search-confidence {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text);
+}
+.search-confidence .tier {
+  font-family: var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+}
+.search-confidence .msg { color: var(--muted); flex: 1; }
+.search-confidence.band-strong { border-color: #7dffa1; }
+.search-confidence.band-strong .tier { color: #7dffa1; }
+.search-confidence.band-good   { border-color: #ffcb6b; }
+.search-confidence.band-good   .tier { color: #ffcb6b; }
+.search-confidence.band-weak   { border-color: #ff944d; }
+.search-confidence.band-weak   .tier { color: #ff944d; }
+.search-confidence.band-noise  { border-color: var(--danger); }
+.search-confidence.band-noise  .tier { color: var(--danger); }
+
+.search-result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+}
+.search-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+.search-meta .rank {
+  color: var(--muted);
+}
+.search-meta .score {
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid currentColor;
+}
+.search-meta .score.band-strong { color: #7dffa1; }
+.search-meta .score.band-good   { color: #ffcb6b; }
+.search-meta .score.band-weak   { color: #ff944d; }
+.search-meta .score.band-noise  { color: var(--danger); }
+.search-meta .kind,
+.search-meta .opt {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--border-dim);
+  color: var(--muted);
+}
+.search-meta .kind-frame { color: var(--accent); border-color: var(--border); }
+.search-meta .kind-clip  { color: var(--text);   border-color: var(--border-dim); }
+
+.search-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border: 1px solid var(--border-dim);
+  background: #000;
+}
+
+.search-result-card video {
+  width: 100%;
+  background: #000;
+  border: 1px solid var(--border-dim);
+}
+
+.search-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.search-info .key {
+  color: var(--text);
+  word-break: break-all;
+}
+.search-info .seg .accent {
+  color: var(--accent);
+}
+.search-info .links {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: 0.2rem;
+}
+.search-info .links a {
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.search-info .links a:hover { color: var(--accent-2); }
+
+.pegasus-inline {
+  margin: 0.4rem 0 0.2rem;
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.45rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+.pegasus-inline header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.pegasus-inline-tag {
+  color: var(--accent);
+}
+.pegasus-inline-cached {
+  color: var(--ok, #6cf48a);
+  border: 1px solid currentColor;
+  padding: 0 0.35rem;
+  border-radius: 2px;
+  font-size: 0.62rem;
+}
+.pegasus-inline-inherited {
+  color: var(--muted);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.pegasus-inline-body {
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+/* ----- Detection (YOLO) overlays + toggle bar ------------------------------ */
+
+.detection-controls {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border-dim);
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.detection-master {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--muted);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.detection-master.on {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(0, 224, 255, 0.08);
+}
+.detection-master .dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04);
+}
+.detection-master.on .dot {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(0, 224, 255, 0.6);
+}
+
+.detection-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.detection-chip {
+  --cls-color: #ff8c00;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border-dim);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+}
+.detection-chip .swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 2px;
+  background: var(--cls-color);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+  opacity: 0.5;
+}
+.detection-chip.on {
+  color: var(--text);
+  border-color: var(--cls-color);
+  background: rgba(255, 255, 255, 0.02);
+}
+.detection-chip.on .swatch { opacity: 1; }
+.detection-chip .count {
+  color: var(--muted);
+  font-size: 0.6rem;
+}
+
+.detection-empty {
+  font-size: 0.66rem;
+}
+
+/* The wrap is positioned so the absolute SVG fills the same box as the
+   underlying <img>. preserveAspectRatio="none" matches object-fit: cover. */
+.search-thumb-wrap {
+  position: relative;
+  line-height: 0;
+}
+.search-thumb-wrap .search-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border: 1px solid var(--border-dim);
+  background: #000;
+  display: block;
+}
+.search-thumb-wrap svg.detections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 140px;
+  pointer-events: none;
+  overflow: visible;
+}
+.search-thumb-wrap[data-detections="off"] svg.detections {
+  display: none;
+}
+.search-thumb-wrap polygon {
+  --cls-color: #ff8c00;
+  fill: var(--cls-color);
+  fill-opacity: 0.28;
+  stroke: var(--cls-color);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: auto;
+}
+/* Mask-only models (e.g. power lines) get thinner strokes + heavier fill
+   because their masks are long, thin, and cover most of the frame. The
+   default 1.5px stroke turns the whole frame orange in dense scenes. */
+.search-thumb-wrap polygon[data-mask-only="true"] {
+  fill-opacity: 0.55;
+  stroke-width: 0.75;
+}
+.search-thumb-wrap polygon[data-class-on="false"] {
+  display: none;
+}
+
+.detection-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.detection-summary-pill {
+  --cls-color: #ff8c00;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--cls-color);
+  color: var(--cls-color);
+  background: rgba(0, 0, 0, 0.4);
 }

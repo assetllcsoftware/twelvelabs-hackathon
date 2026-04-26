@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 1100" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+<defs><marker id="ar_4338ca" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4338ca"/></marker><marker id="ar_0e7490" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/></marker><marker id="ar_7c3aed" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/></marker><marker id="ar_ea580c" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#ea580c"/></marker><marker id="ar_be185d" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#be185d"/></marker><marker id="ar_grey" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L7,3 z" fill="#94a3b8"/></marker></defs>
+<rect width="1640" height="1100" fill="#f8fafc"/>
+<text x="40" y="56" font-size="28" font-weight="800" fill="#0f172a" text-anchor="start">The design space — every dial we could turn</text>
+<text x="40" y="84" font-size="13" font-weight="400" fill="#64748b" text-anchor="start">Bold colored lanes are what's running today. Dashed boxes are alternative slices, pre-/post-processing and model heads we could plug in without re-designing the system.</text>
+<text x="120" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">VIDEO</text>
+<text x="345" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">FEED IT AS</text>
+<text x="600" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">PRE-PROCESS</text>
+<text x="890" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">AI MODEL</text>
+<text x="1180" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">POST-PROCESS</text>
+<text x="1470" y="124" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">INDEX</text>
+<line x1="230" y1="140" x2="230" y2="1050" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 4"/>
+<line x1="460" y1="140" x2="460" y2="1050" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 4"/>
+<line x1="750" y1="140" x2="750" y2="1050" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 4"/>
+<line x1="1030" y1="140" x2="1030" y2="1050" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 4"/>
+<line x1="1330" y1="140" x2="1330" y2="1050" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 4"/>
+<path d="M 430.0 550.0 C 452.5 550.0, 457.5 760.0, 480.0 760.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 550.0 C 452.5 550.0, 457.5 640.0, 480.0 640.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 610.0 C 452.5 610.0, 457.5 520.0, 480.0 520.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 610.0 C 452.5 610.0, 457.5 760.0, 480.0 760.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 610.0 C 452.5 610.0, 457.5 880.0, 480.0 880.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 580.0, 480.0 580.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 640.0, 480.0 640.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 700.0, 480.0 700.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 820.0, 480.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 880.0, 480.0 880.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 520.0 C 747.0 520.0, 753.0 490.0, 780.0 490.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 520.0 C 747.0 520.0, 753.0 610.0, 780.0 610.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 580.0 C 747.0 580.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 640.0 C 747.0 640.0, 753.0 490.0, 780.0 490.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 640.0 C 747.0 640.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 700.0 C 747.0 700.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 760.0 C 747.0 760.0, 753.0 490.0, 780.0 490.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 820.0 C 747.0 820.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 880.0 C 747.0 880.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 720.0 880.0 C 747.0 880.0, 753.0 610.0, 780.0 610.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 490.0 C 1027.0 490.0, 1033.0 700.0, 1060.0 700.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 550.0 C 1027.0 550.0, 1033.0 700.0, 1060.0 700.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 490.0 C 1027.0 490.0, 1033.0 820.0, 1060.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 550.0 C 1027.0 550.0, 1033.0 820.0, 1060.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 610.0 C 1027.0 610.0, 1033.0 820.0, 1060.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 670.0 C 1027.0 670.0, 1033.0 820.0, 1060.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1000.0 730.0 C 1027.0 730.0, 1033.0 820.0, 1060.0 820.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1300.0 820.0 C 1318.0 820.0, 1322.0 730.0, 1340.0 730.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1300.0 700.0 C 1318.0 700.0, 1322.0 490.0, 1340.0 490.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<path d="M 1300.0 700.0 C 1318.0 700.0, 1322.0 550.0, 1340.0 550.0" fill="none" stroke="#cbd5e1" stroke-width="1.0" stroke-opacity="0.85" stroke-dasharray="5 4"/>
+<rect x="1100" y="50" width="16" height="14" rx="3" fill="#ecfdf5" stroke="#15803d" stroke-width="1.2"/>
+<text x="1122" y="61" font-size="11" font-weight="400" fill="#475569" text-anchor="start">shipped today</text>
+<rect x="1225.8" y="50" width="16" height="14" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+<text x="1248" y="61" font-size="11" font-weight="400" fill="#475569" text-anchor="start">shipped · pipe demo only</text>
+<rect x="1424.1999999999998" y="50" width="16" height="14" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+<text x="1446" y="61" font-size="11" font-weight="400" fill="#475569" text-anchor="start">code shipped · awaiting weights</text>
+<rect x="1668.7999999999997" y="50" width="16" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3 2"/>
+<text x="1691" y="61" font-size="11" font-weight="400" fill="#475569" text-anchor="start">explored alternative</text>
+<path d="M 200.0 598.0 C 227.0 598.0, 233.0 550.0, 260.0 550.0" fill="none" stroke="#4338ca" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 430.0 550.0 C 452.5 550.0, 457.5 340.0, 480.0 340.0" fill="none" stroke="#4338ca" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 720.0 340.0 C 747.0 340.0, 753.0 490.0, 780.0 490.0" fill="none" stroke="#4338ca" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1000.0 490.0 C 1027.0 490.0, 1033.0 400.0, 1060.0 400.0" fill="none" stroke="#4338ca" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1300.0 400.0 C 1318.0 400.0, 1322.0 490.0, 1340.0 490.0" fill="none" stroke="#4338ca" stroke-width="2.6" stroke-opacity="0.95" marker-end="url(#ar_4338ca)"/>
+<path d="M 200.0 604.0 C 227.0 604.0, 233.0 664.0, 260.0 664.0" fill="none" stroke="#0e7490" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 430.0 664.0 C 452.5 664.0, 457.5 454.0, 480.0 454.0" fill="none" stroke="#0e7490" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 720.0 454.0 C 747.0 454.0, 753.0 550.0, 780.0 550.0" fill="none" stroke="#0e7490" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1000.0 550.0 C 1027.0 550.0, 1033.0 460.0, 1060.0 460.0" fill="none" stroke="#0e7490" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1300.0 460.0 C 1318.0 460.0, 1322.0 550.0, 1340.0 550.0" fill="none" stroke="#0e7490" stroke-width="2.6" stroke-opacity="0.95" marker-end="url(#ar_0e7490)"/>
+<path d="M 200.0 610.0 C 227.0 610.0, 233.0 610.0, 260.0 610.0" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 430.0 610.0 C 452.5 610.0, 457.5 400.0, 480.0 400.0" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 720.0 400.0 C 747.0 400.0, 753.0 610.0, 780.0 610.0" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1000.0 610.0 C 1027.0 610.0, 1033.0 760.0, 1060.0 760.0" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1300.0 760.0 C 1318.0 760.0, 1322.0 610.0, 1340.0 610.0" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-opacity="0.95" marker-end="url(#ar_7c3aed)"/>
+<path d="M 200.0 616.0 C 227.0 616.0, 233.0 670.0, 260.0 670.0" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 430.0 670.0 C 452.5 670.0, 457.5 460.0, 480.0 460.0" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 720.0 460.0 C 747.0 460.0, 753.0 670.0, 780.0 670.0" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1000.0 670.0 C 1027.0 670.0, 1033.0 637.0, 1060.0 637.0" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1300.0 637.0 C 1318.0 637.0, 1322.0 667.0, 1340.0 667.0" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-opacity="0.95" marker-end="url(#ar_ea580c)"/>
+<path d="M 200.0 622.0 C 227.0 622.0, 233.0 676.0, 260.0 676.0" fill="none" stroke="#be185d" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 430.0 676.0 C 452.5 676.0, 457.5 466.0, 480.0 466.0" fill="none" stroke="#be185d" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 720.0 466.0 C 747.0 466.0, 753.0 730.0, 780.0 730.0" fill="none" stroke="#be185d" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1000.0 730.0 C 1027.0 730.0, 1033.0 643.0, 1060.0 643.0" fill="none" stroke="#be185d" stroke-width="2.6" stroke-opacity="0.95"/>
+<path d="M 1300.0 643.0 C 1318.0 643.0, 1322.0 673.0, 1340.0 673.0" fill="none" stroke="#be185d" stroke-width="2.6" stroke-opacity="0.95" marker-end="url(#ar_be185d)"/>
+<rect x="40" y="588" width="160" height="44" rx="10" fill="#0f172a"/><text x="120" y="615" font-size="14" font-weight="700" fill="white" text-anchor="middle">Inspection video</text>
+<rect x="260" y="528" width="170" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="345" y="555" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">as video</text>
+<rect x="260" y="588" width="170" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="345" y="615" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">as clip</text>
+<rect x="260" y="648" width="170" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="345" y="675" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">as frame</text>
+<rect x="480" y="318" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="600" y="345" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">passthrough</text>
+<rect x="480" y="378" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="600" y="405" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">ffmpeg cut → ~6 s clips</text>
+<rect x="480" y="438" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="600" y="465" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">ffmpeg sample → 1 fps</text>
+<rect x="480" y="498" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="525" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">scene-detect re-cut</text>
+<rect x="480" y="558" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="585" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">key-frame select</text>
+<rect x="480" y="618" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="645" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">ROI / object crop</text>
+<rect x="480" y="678" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="705" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">background mask</text>
+<rect x="480" y="738" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="765" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">stabilize</text>
+<rect x="480" y="798" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="825" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">super-resolution</text>
+<rect x="480" y="858" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="600" y="885" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">polygon overlay</text>
+<rect x="780" y="468" width="220" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="890" y="495" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Marengo · video mode</text>
+<rect x="780" y="528" width="220" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="890" y="555" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Marengo · image mode</text>
+<rect x="780" y="588" width="220" height="44" rx="9" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/><text x="890" y="615" font-size="12" font-weight="600" fill="#92400e" text-anchor="middle">Pegasus 1.2 · describe</text>
+<rect x="780" y="648" width="220" height="44" rx="9" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/><text x="890" y="675" font-size="12" font-weight="600" fill="#92400e" text-anchor="middle">YOLO · power-line</text>
+<rect x="780" y="708" width="220" height="44" rx="9" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/><text x="890" y="735" font-size="12" font-weight="600" fill="#92400e" text-anchor="middle">YOLO · insulator + pole</text>
+<rect x="1060" y="378" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="405" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">L2 normalize</text>
+<rect x="1060" y="438" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="465" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">frame-snap to second</text>
+<rect x="1060" y="498" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="525" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">per-source dedupe</text>
+<rect x="1060" y="558" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="585" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">top-K + threshold</text>
+<rect x="1060" y="618" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="645" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">mask → polygon</text>
+<rect x="1060" y="678" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="1180" y="705" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">reciprocal rank fusion</text>
+<rect x="1060" y="738" width="240" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1180" y="765" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">caption re-embed → join</text>
+<rect x="1060" y="798" width="240" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="1180" y="825" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">cluster / classify</text>
+<rect x="1340" y="468" width="260" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1470" y="495" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Vector index · clips</text>
+<rect x="1340" y="528" width="260" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1470" y="555" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Vector index · frames</text>
+<rect x="1340" y="588" width="260" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1470" y="615" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Caption table</text>
+<rect x="1340" y="648" width="260" height="44" rx="9" fill="#ecfdf5" stroke="#15803d" stroke-width="1.4"/><text x="1470" y="675" font-size="12" font-weight="600" fill="#065f46" text-anchor="middle">Polygon table</text>
+<rect x="1340" y="708" width="260" height="44" rx="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="1470" y="735" font-size="12" font-weight="600" fill="#475569" text-anchor="middle">Cluster / class index</text>
+<text x="40" y="1010" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="start" letter-spacing="2">shipped pipelines</text>
+<rect x="40" y="1024" width="14" height="14" rx="3" fill="#4338ca"/>
+<text x="60" y="1035" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">CLIP MATCH</text>
+<rect x="150.0" y="1024" width="14" height="14" rx="3" fill="#0e7490"/>
+<text x="170" y="1035" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">FRAME SNAP</text>
+<rect x="260.0" y="1024" width="14" height="14" rx="3" fill="#7c3aed"/>
+<text x="280" y="1035" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">CLIP CAPTIONS</text>
+<rect x="390.4" y="1024" width="14" height="14" rx="3" fill="#ea580c"/>
+<text x="410" y="1035" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">POWER-LINE OVERLAY</text>
+<rect x="554.8" y="1024" width="14" height="14" rx="3" fill="#be185d"/>
+<text x="575" y="1035" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">INSULATOR + POLE</text>
+<text x="40" y="1072" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">Read left → right: every video can be fed to the AI as the whole asset, as cut clips or as sampled frames; pre- and post-processing slot in on either side of the model. Today's stack uses passthrough for video, 1 fps sampling for frames, and 6 s cuts for clip text.</text>
+</svg>

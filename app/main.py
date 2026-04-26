@@ -15,11 +15,14 @@ from urllib.parse import urlparse
 import boto3
 import yt_dlp
 from botocore.exceptions import ClientError
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
+
+import db as portal_db
+import search as portal_search
 
 
 @dataclass(frozen=True)
@@ -101,6 +104,35 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app = FastAPI(title="Hackathon Media Portal")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 s3 = boto3.client("s3", region_name=AWS_REGION)
+
+# Migrations are baked into the image at /app/migrations by the Dockerfile.
+# In local dev, fall back to the repo's scripts/embed/migrations directory.
+MIGRATIONS_DIR = BASE_DIR / "migrations"
+if not MIGRATIONS_DIR.exists():
+    MIGRATIONS_DIR = BASE_DIR.parent / "scripts" / "embed" / "migrations"
+
+
+@app.on_event("startup")
+def _init_db() -> None:
+    pool = portal_db.init_pool()
+    if pool is None:
+        return
+    if portal_db.RUN_MIGRATIONS:
+        try:
+            applied = portal_db.run_migrations(MIGRATIONS_DIR)
+            if applied:
+                print(f"[db] applied migrations: {applied}", flush=True)
+            else:
+                print("[db] migrations: nothing to apply", flush=True)
+        except Exception as exc:  # noqa: BLE001
+            # Don't crash the portal on a migration error during boot —
+            # surface it via /api/db/health and let an operator decide.
+            print(f"[db] migration failed: {exc}", flush=True)
+
+
+@app.on_event("shutdown")
+def _close_db() -> None:
+    portal_db.close_pool()
 
 youtube_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="yt-dlp")
 youtube_jobs: dict[str, dict] = {}
@@ -195,6 +227,132 @@ def serializable_categories() -> list[dict]:
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/api/db/health")
+def db_health():
+    return portal_db.health()
+
+
+# ---------------------------------------------------------------------------
+# Video search (Phase D.2). Mirrors scripts/embed/serve.py but reads from
+# RDS pgvector instead of an in-memory numpy matrix. The body shape of every
+# /api/search/* response is identical to the local search server so the
+# frontend can target either backend without changes.
+# ---------------------------------------------------------------------------
+
+# Empirically Marengo ignores text longer than a few sentences and bills you
+# for it anyway, so we cap before the round trip.
+MAX_QUERY_TEXT_CHARS = 1024
+# Bedrock's image media-source limit. We cap before base64 + JSON inflation
+# so a friendly 413 is returned to the user instead of a Bedrock 400.
+MAX_QUERY_IMAGE_BYTES = 5 * 1024 * 1024
+
+
+class TextSearchPayload(BaseModel):
+    q: str = Field(min_length=1, max_length=MAX_QUERY_TEXT_CHARS)
+    top_k: int = Field(default=10, ge=1, le=50)
+
+
+def _read_query_image(file: UploadFile) -> bytes:
+    raw = file.file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Image upload is empty")
+    if len(raw) > MAX_QUERY_IMAGE_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Image must be <= {MAX_QUERY_IMAGE_BYTES // (1024 * 1024)} MB",
+        )
+    return raw
+
+
+def _bedrock_error(exc: Exception) -> HTTPException:
+    """Map a Bedrock exception to a sensible HTTP status."""
+    code = getattr(exc, "response", {}).get("Error", {}).get("Code") if isinstance(
+        exc, ClientError
+    ) else None
+    if code in {"ValidationException", "ThrottlingException"}:
+        return HTTPException(status_code=400, detail=f"Bedrock {code}: {exc}")
+    if code == "AccessDeniedException":
+        return HTTPException(
+            status_code=502,
+            detail=(
+                "Bedrock denied access — task role likely missing "
+                "bedrock:InvokeModel for this Marengo inference profile."
+            ),
+        )
+    return HTTPException(status_code=502, detail=f"Bedrock error: {exc}")
+
+
+@app.get("/api/search/stats")
+def search_stats(request: Request):
+    require_authorized(request)
+    return portal_search.stats()
+
+
+@app.get("/api/detection-classes")
+def search_detection_classes(request: Request):
+    require_authorized(request)
+    return portal_search.detection_classes()
+
+
+@app.post("/api/search/text")
+def search_text(request: Request, payload: TextSearchPayload):
+    require_authorized(request)
+    if not portal_db.is_enabled():
+        raise HTTPException(status_code=503, detail="Search backend is not configured")
+    try:
+        vec = portal_search.embed_text(payload.q.strip())
+    except ClientError as exc:
+        raise _bedrock_error(exc) from exc
+    return portal_search.search(vec, top_k=payload.top_k)
+
+
+@app.post("/api/search/image")
+async def search_image(
+    request: Request,
+    file: UploadFile = File(...),
+    top_k: int = Form(10),
+):
+    require_authorized(request)
+    if not portal_db.is_enabled():
+        raise HTTPException(status_code=503, detail="Search backend is not configured")
+    if top_k < 1 or top_k > 50:
+        raise HTTPException(status_code=400, detail="top_k must be between 1 and 50")
+    img = _read_query_image(file)
+    try:
+        vec = portal_search.embed_image_bytes(img)
+    except ClientError as exc:
+        raise _bedrock_error(exc) from exc
+    return portal_search.search(vec, top_k=top_k)
+
+
+@app.post("/api/search/text-image")
+async def search_text_image(
+    request: Request,
+    q: str = Form(...),
+    file: UploadFile = File(...),
+    top_k: int = Form(10),
+):
+    require_authorized(request)
+    if not portal_db.is_enabled():
+        raise HTTPException(status_code=503, detail="Search backend is not configured")
+    text = q.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="missing q")
+    if len(text) > MAX_QUERY_TEXT_CHARS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"q must be <= {MAX_QUERY_TEXT_CHARS} characters",
+        )
+    if top_k < 1 or top_k > 50:
+        raise HTTPException(status_code=400, detail="top_k must be between 1 and 50")
+    img = _read_query_image(file)
+    try:
+        vec = portal_search.embed_text_image_bytes(text, img)
+    except ClientError as exc:
+        raise _bedrock_error(exc) from exc
+    return portal_search.search(vec, top_k=top_k)
 
 
 @app.get("/", response_class=HTMLResponse)

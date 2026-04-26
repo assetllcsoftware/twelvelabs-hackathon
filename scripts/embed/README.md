@@ -62,6 +62,28 @@ Async jobs typically finish in a few minutes; status updates print live. The
 Bedrock-side output also lands at `s3://<bucket>/embeddings/videos/<job-id>/`
 so we have an off-laptop copy too.
 
+## 3b. Embed per-frame thumbnails (frame-precise seek)
+
+Marengo's clip embeddings average over ~6s windows, which is great for
+"find the right shot" but vague when you want to scrub to the *exact* moment
+that matched. Frame embeddings fix that: we extract one frame per second
+with ffmpeg, embed each frame via Marengo's sync image API, and join them
+into the same 512-d index. At search time the ranker picks the best
+matching frame within each clip's window and seeks the preview there.
+
+```bash
+pipenv run python -m scripts.embed.embed_frames               # all cached videos, 1 fps
+pipenv run python -m scripts.embed.embed_frames --fps 2       # every 0.5s (twice the cost)
+pipenv run python -m scripts.embed.embed_frames --fps 0.5     # every 2s (half the cost)
+pipenv run python -m scripts.embed.embed_frames --limit 1     # one video only
+pipenv run python -m scripts.embed.embed_frames --force       # re-extract + re-embed
+```
+
+Requires `ffmpeg` on `PATH` (already there on most dev boxes; on Ubuntu:
+`sudo apt install ffmpeg`). Frames double as UI thumbnails — they're stored
+under `data/embeddings/thumbs/<digest>/frame_NNNNN.jpg` and served by the
+local UI at `/thumbs/...`.
+
 ## 4. Search — CLI
 
 ```bash
@@ -90,14 +112,26 @@ pipenv run python -m scripts.embed.serve --port 9000
 ```
 
 Tabs for `TEXT` / `IMAGE` / `TEXT + IMG`. The image dropzone takes
-drag-and-drop, click-to-choose, and **paste-from-clipboard**. Each result
-card embeds a `<video controls>` whose `src` ends in `#t=<start_sec>`, so
-hitting play jumps straight to the matched segment. The sidebar shows the
-current corpus and a `REFRESH` button to re-read `data/embeddings/` after
-running `embed_videos`.
+drag-and-drop, click-to-choose, and **paste-from-clipboard**.
+
+Each result card shows:
+
+- the matched **frame thumbnail** (when frame embeddings are present),
+- a `<video controls>` whose `src` ends in `#t=<frame timestamp>` — hit play
+  and the video starts at the precise matched moment, not the start of the
+  6-second clip,
+- a `FRAME` or `CLIP` badge so you can tell whether the hit came directly
+  from a frame embedding or from a clip embedding refined to its best frame,
+- a confidence band (`STRONG / GOOD / WEAK / NOISE FLOOR`) computed from the
+  cosine score so you can spot when ranking is meaningful vs noise.
+
+The sidebar lists each video's row count broken into `<clips>c · <frames>f`
+and a `REFRESH` button to re-read `data/embeddings/` after running
+`embed_videos` or `embed_frames`.
 
 **Definition of done for Phase A:** click play on a result card and the
-video starts at the right second.
+video starts at the matched frame, with a thumbnail showing the matched
+moment.
 
 ## 6. Inspecting a single query embedding
 
@@ -112,11 +146,18 @@ pipenv run python -m scripts.embed.embed_query image ./frame.jpg --summary
 
 ```
 data/embeddings/
-  <sha256(s3_key)[:24]>.json   # one file per video, with all segment vectors
+  <sha256(s3_key)[:24]>.json          # clip embeddings (one file per video)
+  frames/
+    <sha256(s3_key)[:24]>.json        # frame embeddings (one file per video)
+  thumbs/
+    <sha256(s3_key)[:24]>/
+      frame_00001.jpg                 # one JPEG per sampled frame
+  _video-cache/
+    <basename(s3_key)>                # downloaded source video, used for ffmpeg
 ```
 
-One file per video. Delete a file to force a re-embed of that video. Delete
-the directory to start over.
+Delete any one file to force a re-embed of that video at that granularity.
+Delete `data/embeddings/` entirely to start over.
 
 ## Why a separate `requirements-local.txt`?
 

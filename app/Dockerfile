@@ -14,8 +14,11 @@ RUN pip install --no-cache-dir pipenv \
     && pipenv install --system --deploy
 
 COPY app/main.py ./main.py
+COPY app/db.py ./db.py
+COPY app/search.py ./search.py
 COPY app/templates ./templates
 COPY app/static ./static
+COPY scripts/embed/migrations ./migrations
 
 EXPOSE 8000
 

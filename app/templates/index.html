@@ -116,6 +116,17 @@
 
   <div class="layout">
     <aside class="sidebar">
+      <h2 class="sidebar-heading">Mission Search</h2>
+      <nav id="searchNav" class="category-nav">
+        <button class="category-button category-button--primary" data-tool-id="search" type="button">
+          <span class="icon-wrap"><svg class="icon"><use href="#icon-search"/></svg></span>
+          <span>
+            <span class="label">Search</span>
+            <span class="desc">Multimodal search across embedded videos</span>
+          </span>
+          <span class="count" data-count-for="tool-search">--</span>
+        </button>
+      </nav>
       <h2 class="sidebar-heading">Object Registry</h2>
       <nav id="categoryNav" class="category-nav"></nav>
       <h2 class="sidebar-heading">Ingest Tools</h2>
@@ -145,6 +156,73 @@
     </aside>
 
     <main class="content">
+      <div id="searchView" class="search-view" hidden>
+        <section class="search-card">
+          <header class="search-card-header">
+            <div class="icon-wrap"><svg class="icon icon-lg"><use href="#icon-search"/></svg></div>
+            <div>
+              <h3>Multimodal Search</h3>
+              <p class="muted">Marengo Embed 3.0 + pgvector. Queries are embedded in the same 512-d space as the corpus.</p>
+            </div>
+          </header>
+
+          <div class="search-modes" id="searchModes" role="tablist">
+            <button type="button" class="search-mode active" data-mode="text" role="tab">Text</button>
+            <button type="button" class="search-mode" data-mode="image" role="tab">Image</button>
+            <button type="button" class="search-mode" data-mode="text-image" role="tab">Text + Image</button>
+          </div>
+
+          <p id="searchModeHint" class="muted search-mode-hint"></p>
+
+          <form id="searchForm" class="search-form">
+            <label class="search-label" id="searchTextLabel">
+              <span>Text query</span>
+              <div class="search-input">
+                <svg class="icon"><use href="#icon-search"/></svg>
+                <input id="searchQuery" type="text" placeholder='e.g. "vegetation near a transmission line"' autocomplete="off" maxlength="1024">
+              </div>
+            </label>
+
+            <div id="searchDropzone" class="search-dropzone hidden">
+              <input id="searchFileInput" type="file" accept="image/*" hidden>
+              <div class="search-dropzone-inner">
+                <svg class="icon icon-lg"><use href="#icon-image"/></svg>
+                <p>Drop an image, click to choose, or paste from clipboard</p>
+                <span id="searchDzStatus" class="muted">no image</span>
+                <img id="searchDzPreview" class="search-dz-preview" hidden>
+              </div>
+            </div>
+
+            <div class="search-form-actions">
+              <label class="search-topk">
+                <span>Top K</span>
+                <input id="searchTopK" type="number" min="1" max="50" value="10">
+              </label>
+              <button type="submit" class="primary-button" id="searchSubmit">
+                <svg class="icon"><use href="#icon-search"/></svg>
+                <span>Search</span>
+              </button>
+              <span class="search-spinner" id="searchSpinner" hidden>embedding…</span>
+            </div>
+          </form>
+
+          <div id="searchError" class="search-error" hidden></div>
+
+          <div id="searchStats" class="search-stats muted">corpus: loading…</div>
+
+          <div id="detectionControls" class="detection-controls" hidden>
+            <button type="button" class="detection-master on" id="detectionMaster" data-on="true">
+              <span class="dot"></span>
+              <span class="label">Detections ON</span>
+            </button>
+            <span class="detection-classes" id="detectionClasses"></span>
+            <span class="detection-empty muted" id="detectionEmpty">no detections in corpus yet</span>
+          </div>
+        </section>
+
+        <section id="searchResults" class="search-results"></section>
+      </div>
+
       <section class="content-header">
         <div>
           <h1 id="categoryTitle">Loading...</h1>
@@ -230,6 +308,7 @@
           <p id="youtubeEmpty" class="empty-state">No jobs yet. Paste a URL above to start.</p>
         </section>
       </div>
+
     </main>
   </div>
 
